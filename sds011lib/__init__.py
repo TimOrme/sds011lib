@@ -306,10 +306,10 @@ class SDS011Reader:
         time.sleep(self.send_command_sleep)
 
     def _read_response(self) -> bytes:
-        """
-        Read a response from the device.
+        """Read a response from the device.
 
-        Responses from the device should always be 10 bytes in lenght.
+        Responses from the device should always be 10 bytes in length.
+
         Returns:
             Bytes from the device.
 
@@ -323,8 +323,8 @@ class SDS011Reader:
         return result
 
     def _cmd_checksum(self, data: bytes) -> int:
-        """
-        Generate a checksum for the data bytes of a command.
+        """Generate a checksum for the data bytes of a command.
+
         Args:
             data: The data bytes of write command.
 
@@ -354,8 +354,7 @@ class SDS011QueryReader:
         self.base_reader.set_query_mode()
 
     def query(self) -> QueryResponse:
-        """
-        Query the device for pollutant data.
+        """Query the device for pollutant data.
 
         Returns:
             The latest pollutant data.
@@ -365,8 +364,7 @@ class SDS011QueryReader:
         return self.base_reader.query_data()
 
     def get_reporting_mode(self) -> ReportingModeResponse:
-        """
-        Get the current reporting mode of the device.
+        """Get the current reporting mode of the device.
 
         Returns:
             The current reporting mode of the device.
@@ -418,8 +416,7 @@ class SDS011QueryReader:
         return self.base_reader.query_device_id()
 
     def get_working_period(self) -> WorkingPeriodReadResponse:
-        """
-        Retrieve the current working period for the device.
+        """Retrieve the current working period for the device.
 
         Returns:
             A response with the current working period.
@@ -428,8 +425,7 @@ class SDS011QueryReader:
         return self.base_reader.query_working_period()
 
     def set_working_period(self, working_period: int) -> WorkingPeriodReadResponse:
-        """
-        Set the working period for the device.
+        """Set the working period for the device.
 
         Working period must be between 0 and 30.
 
@@ -478,8 +474,7 @@ class SDS011ActiveReader:
         self.base_reader.set_active_mode()
 
     def query(self) -> QueryResponse:
-        """
-        Query the device for pollutant data.
+        """Query the device for pollutant data.
 
         Returns:
             The latest pollutant data.
@@ -518,8 +513,7 @@ class SDS011ActiveReader:
         self.ser_dev.read(10)
 
     def set_working_period(self, working_period: int) -> None:
-        """
-        Set the working period for the device.
+        """Set the working period for the device.
 
         Working period must be between 0 and 30.
 

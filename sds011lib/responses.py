@@ -131,6 +131,7 @@ class DeviceIdResponse(ReadResponse):
 
 class SleepWakeReadResponse(ReadResponse):
     """Sleep/Wake Response.
+
     Attributes:
         operation_type: The operation type the response is for, either QUERY or SET_MODE.
         state: The current sleep state, either WAKE or SLEEP.
