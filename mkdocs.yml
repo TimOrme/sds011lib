@@ -6,7 +6,6 @@ theme:
 nav:
   - 'index.md'
   - 'understanding.md'
-  - 'examples.md'
   - 'api_ref.md'
   - 'contributing.md'
   - 'resource.md'

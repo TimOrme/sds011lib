@@ -77,7 +77,7 @@ class SDS011Reader:
         return QueryResponse(self._read_response())
 
     def request_reporting_mode(self) -> None:
-        """Submit a request to the device to return the current reporting mode.     """
+        """Submit a request to the device to return the current reporting mode."""
         cmd = (
             con.Command.SET_REPORTING_MODE.value
             + con.OperationType.QUERY.value

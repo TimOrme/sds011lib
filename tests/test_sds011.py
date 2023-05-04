@@ -71,9 +71,7 @@ class TestBaseReader:
         result = reader.query_data()
         assert result.pm25 > 0.0
 
-    def test_queries_in_sleep_mode_are_incomplete(
-        self, reader: SDS011Reader
-    ) -> None:
+    def test_queries_in_sleep_mode_are_incomplete(self, reader: SDS011Reader) -> None:
         # Device can't be asked anything in sleep mode.
         reader.set_query_mode()
         reader.sleep()
@@ -122,9 +120,7 @@ class TestBaseReader:
         result = reader.query_reporting_mode()
         assert result.state == ReportingMode.QUERYING
 
-    def test_get_reporting_mode_while_active_fails(
-        self, reader: SDS011Reader
-    ) -> None:
+    def test_get_reporting_mode_while_active_fails(self, reader: SDS011Reader) -> None:
         reader.set_active_mode()
         with pytest.raises(IncorrectCommandException):
             reader.query_reporting_mode()
