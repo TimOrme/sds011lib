@@ -1,0 +1,25 @@
+site_name: SDS011lib
+
+theme:
+  name: material
+
+nav:
+  - 'index.md'
+  - 'understanding.md'
+  - 'examples.md'
+  - 'api_ref.md'
+  - 'contributing.md'
+  - 'resource.md'
+
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+
+plugins:
+- search:
+- mkdocstrings:
+    default_handler: python
+    handlers:
+        python:
+            options:
+                show_source: false
