@@ -22,3 +22,7 @@ jobs:
       - name: Run tests
         run: just test
       - run: mkdocs gh-deploy --force --clean --verbose
+      - name: Build and publish to pypi
+        uses: JRubics/poetry-publish@v1.16
+        with:
+          pypi_token: ${{ secrets.PYPI_TOKEN }}
