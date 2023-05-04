@@ -1,0 +1,24 @@
+name: Python package
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup just
+        uses: extractions/setup-just@v1
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install poetry
+        uses: Gr1N/setup-poetry@v8
+      - name: Install dev dependencies
+        run: poetry install --no-root
+        env:
+          POETRY_VIRTUALENVS_CREATE: false
+      - name: Run tests
+        run: just test
+      - run: mkdocs gh-deploy --force --clean --verbose
