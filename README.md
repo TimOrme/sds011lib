@@ -2,6 +2,8 @@
 
 `sds011lib` is a fully-typed, nearly-complete, python3 library for interacting with the SDS011 Air Quality Sensor.
 
+The full documentation is available at https://timorme.github.io/sds011lib/
+
 ## Installation
 
 ```commandline
@@ -28,5 +30,3 @@ sensor.sleep()
 # Wake it back up
 sensor.wake()
 ```
-
-The full documentation is available at https://timorme.github.io/sds011lib/
