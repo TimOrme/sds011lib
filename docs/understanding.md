@@ -41,6 +41,9 @@ sleep mode, the device still draws some power; just the fan and diode are turned
 
 ### Device IDs
 
+The SDS011 has a 4 byte device ID, which _seems_ to help support cases where you have multiple devices attached to a single 
+port, though I haven't actually tried to set this up.  Every command that the SDS011 accepts can take a target device ID,
+or you can send commands to target *all* devices by passing `\xFF\xFF` as the device ID. 
 
 ## Suggested Operation
 
@@ -66,9 +69,56 @@ throughout an hour, you can extend the lifetime of the device to multiple years.
 
 ## Quirks
 
-### Writing in Active Mode
+### Sending Commands in Active Mode
 
-When in active mode, you can write commands to the device.  However,  
+When in active mode, you can send commands to the device.  However, because the device is essentially constantly 
+changing its response buffer to be pollutant data, you can't actually query the results of those sent commands back.
 
+Well, sort of.
+
+It seems that the device does sometimes, eventually respond to these commands, and so in active mode it can be quite unpredictable 
+about what it might return after you send a command to it. As an example:
+
+```python
+from sds011lib import SDS011ActiveReader
+import serial
+# Create a query mode reader.
+reader = SDS011ActiveReader(ser_dev=serial.Serial('/dev/ttyUSB0', timeout=2))
+
+# Set the ID
+reader.set_device_id(b"\xC1\x4B")
+
+# Query the reader a bunch of times.
+result1 = reader.query() # Might succeed
+result2 = reader.query() # Might succeed
+result3 = reader.query() # Might fail because we suddenly get a response to the `set_device_id` command.
+```
+
+Unfortunately, I wasn't able to figure out any rhyme or reason to this behavior, and so in the current implementation 
+of the library I would consider this a generally unstable mdoe to use.
 
 ### Switching Reporting Modes
+
+When switching the reader between reporting modes, it generally seems to get in a confused state, _unless_ you close 
+and then re-open the serial connection.  I cannot figure out why this is, and it doesn't really make sense since the 
+connection itself should be stateless, but it does seem to work consistently.
+
+All implementations of the reader hide this odd behavior for you, but unfortunately I don't have a good explanation of 
+why it is this way.
+
+### Delayed Responses to Sending Commands
+
+When sending commands to the device, it typically takes about a second for the device to write a response back to the 
+serial port.  As such, all the readers are configured by default to have a 1 second sleep after a command is sent, so 
+that the device has time to respond, and you don't receive errors when trying to read results back.
+
+You can try and configure this to tune it if you'd like:
+
+```python
+from sds011lib import SDS011ActiveReader
+import serial
+# Create a query mode reader, with a 2 second sleep instead 
+# of 1 after a command is sent. 
+reader = SDS011ActiveReader(ser_dev=serial.Serial('/dev/ttyUSB0', timeout=2), 
+                            send_command_sleep=2)
+```
