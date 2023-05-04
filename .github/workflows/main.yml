@@ -22,4 +22,3 @@ jobs:
       - name: Run tests
         run: just test
       - run: mkdocs gh-deploy --force --clean --verbose
-
