@@ -1,8 +1,8 @@
-name: Master
+name: Release
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "v*.*.*"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,7 +19,10 @@ jobs:
         run: poetry install --no-root
         env:
           POETRY_VIRTUALENVS_CREATE: false
-      - name: Check linting
-        run: just lint
       - name: Run tests
         run: just test
+      - run: mkdocs gh-deploy --force --clean --verbose
+      - name: Build and publish to pypi
+        uses: JRubics/poetry-publish@v1.16
+        with:
+          pypi_token: ${{ secrets.PYPI_TOKEN }}

@@ -7,6 +7,9 @@ Spec: https://cdn-reichelt.de/documents/datenblatt/X200/SDS011-DATASHEET.pdf
 """
 
 import time
+
+import serial
+
 from .responses import (
     QueryResponse,
     ReportingModeResponse,
@@ -22,9 +25,10 @@ from .exceptions import (
     IncorrectCommandCodeException,
 )
 
-from typing import Protocol
+from typing import Protocol, Union, runtime_checkable
 
 
+@runtime_checkable
 class SerialLike(Protocol):
     """A serial-like device."""
 
@@ -48,7 +52,7 @@ class SerialLike(Protocol):
 class SDS011Reader:
     """NOVA PM SDS011 Reader."""
 
-    def __init__(self, ser_dev: SerialLike, send_command_sleep: int = 1):
+    def __init__(self, ser_dev: Union[str, SerialLike], send_command_sleep: int = 1):
         """Create a basic device.
 
         This is mostly a low level implementation. For practical purposes, most users will want to use the
@@ -56,10 +60,15 @@ class SDS011Reader:
         serves as the base class for the other reader implementations anyways.
 
         Args:
-            ser_dev: A serial device.
+            ser_dev: A path to a serial device, or an instance of serial.Serial.
             send_command_sleep: The number of seconds to sleep after sending a command to the device.
         """
-        self.ser = ser_dev
+        if isinstance(ser_dev, str):
+            self.ser: serial.Serial = serial.Serial(ser_dev, timeout=2)
+        elif isinstance(ser_dev, SerialLike):
+            self.ser = ser_dev
+        else:
+            raise AttributeError("ser_dev must be a string or Serial-like object.")
         self.send_command_sleep = send_command_sleep
 
     def request_data(self) -> None:
@@ -340,11 +349,11 @@ class SDS011Reader:
 class SDS011QueryReader:
     """Reader working in query mode."""
 
-    def __init__(self, ser_dev: SerialLike, send_command_sleep: int = 1):
+    def __init__(self, ser_dev: Union[str, SerialLike], send_command_sleep: int = 1):
         """Create a reader which operates exclusively in query mode.
 
         Args:
-            ser_dev: A serial device.
+            ser_dev: A path to a serial device, or an instance of serial.Serial.
             send_command_sleep: The number of seconds to sleep after sending a command to the device.
         """
         self.base_reader = SDS011Reader(
@@ -459,17 +468,17 @@ class SDS011ActiveReader:
     Use with caution! Active mode is unpredictable.  Query mode is much preferred.
     """
 
-    def __init__(self, ser_dev: SerialLike, send_command_sleep: int = 2):
+    def __init__(self, ser_dev: Union[str, SerialLike], send_command_sleep: int = 2):
         """Create a reader which operates exclusively in active mode.
 
         Args:
-            ser_dev: A serial device.
+            ser_dev: A path to a serial device, or an instance of serial.Serial.
             send_command_sleep: The number of seconds to sleep after sending a command to the device.
         """
         self.base_reader = SDS011Reader(
             ser_dev=ser_dev, send_command_sleep=send_command_sleep
         )
-        self.ser_dev = ser_dev
+        self.ser_dev: SerialLike = self.base_reader.ser
         self.base_reader.safe_wake()
         self.base_reader.set_active_mode()
 

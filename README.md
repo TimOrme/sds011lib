@@ -1,5 +1,7 @@
 # sds011lib
 
+![Main](https://github.com/TimOrme/sds011lib/actions/workflows/main.yml/badge.svg)
+
 `sds011lib` is a fully-typed, nearly-complete, python3 library for interacting with the SDS011 Air Quality Sensor.
 
 The full documentation is available at https://timorme.github.io/sds011lib/
