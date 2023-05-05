@@ -78,6 +78,18 @@ jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
 uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
+name = "cachetools"
+version = "5.3.0"
+description = "Extensible memoizing collections and decorators"
+category = "dev"
+optional = false
+python-versions = "~=3.7"
+files = [
+    {file = "cachetools-5.3.0-py3-none-any.whl", hash = "sha256:429e1a1e845c008ea6c85aa35d4b98b65d6a9763eeef3e37e92728a12d1de9d4"},
+    {file = "cachetools-5.3.0.tar.gz", hash = "sha256:13dfddc7b8df938c21a940dfa6557ce6e94a2f1cdfa58eb90c805721d58f2c14"},
+]
+
+[[package]]
 name = "certifi"
 version = "2022.12.7"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -87,6 +99,18 @@ python-versions = ">=3.6"
 files = [
     {file = "certifi-2022.12.7-py3-none-any.whl", hash = "sha256:4ad3232f5e926d6718ec31cfc1fcadfde020920e278684144551c91769c7bc18"},
     {file = "certifi-2022.12.7.tar.gz", hash = "sha256:35824b4c3a97115964b408844d64aa14db1cc518f6562e8d7261699d1350a9e3"},
+]
+
+[[package]]
+name = "chardet"
+version = "5.1.0"
+description = "Universal encoding detector for Python 3"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "chardet-5.1.0-py3-none-any.whl", hash = "sha256:362777fb014af596ad31334fde1e8c327dfdb076e1960d1694662d46a6917ab9"},
+    {file = "chardet-5.1.0.tar.gz", hash = "sha256:0d62712b956bc154f85fb0a266e2a3c5913c2967e00348701b32411d6def31e5"},
 ]
 
 [[package]]
@@ -202,6 +226,18 @@ files = [
 ]
 
 [[package]]
+name = "distlib"
+version = "0.3.6"
+description = "Distribution utilities"
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "distlib-0.3.6-py2.py3-none-any.whl", hash = "sha256:f35c4b692542ca110de7ef0bea44d73981caeb34ca0b9b6b2e6d7790dda8f80e"},
+    {file = "distlib-0.3.6.tar.gz", hash = "sha256:14bad2d9b04d3a36127ac97f30b12a19268f211063d8f8ee4f47108896e11b46"},
+]
+
+[[package]]
 name = "docutils"
 version = "0.19"
 description = "Docutils -- Python Documentation Utilities"
@@ -227,6 +263,22 @@ files = [
 
 [package.extras]
 test = ["pytest (>=6)"]
+
+[[package]]
+name = "filelock"
+version = "3.12.0"
+description = "A platform independent file lock."
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "filelock-3.12.0-py3-none-any.whl", hash = "sha256:ad98852315c2ab702aeb628412cbf7e95b7ce8c3bf9565670b4eaecf1db370a9"},
+    {file = "filelock-3.12.0.tar.gz", hash = "sha256:fc03ae43288c013d2ea83c8597001b1129db351aad9c57fe2409327916b8e718"},
+]
+
+[package.extras]
+docs = ["furo (>=2023.3.27)", "sphinx (>=6.1.3)", "sphinx-autodoc-typehints (>=1.23,!=1.23.4)"]
+testing = ["covdefaults (>=2.3)", "coverage (>=7.2.3)", "diff-cover (>=7.5)", "pytest (>=7.3.1)", "pytest-cov (>=4)", "pytest-mock (>=3.10)", "pytest-timeout (>=2.1)"]
 
 [[package]]
 name = "ghp-import"
@@ -794,6 +846,26 @@ markdown = ">=3.2"
 pyyaml = "*"
 
 [[package]]
+name = "pyproject-api"
+version = "1.5.1"
+description = "API to interact with the python pyproject.toml based projects"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "pyproject_api-1.5.1-py3-none-any.whl", hash = "sha256:4698a3777c2e0f6b624f8a4599131e2a25376d90fe8d146d7ac74c67c6f97c43"},
+    {file = "pyproject_api-1.5.1.tar.gz", hash = "sha256:435f46547a9ff22cf4208ee274fca3e2869aeb062a4834adfc99a4dd64af3cf9"},
+]
+
+[package.dependencies]
+packaging = ">=23"
+tomli = {version = ">=2.0.1", markers = "python_version < \"3.11\""}
+
+[package.extras]
+docs = ["furo (>=2022.12.7)", "sphinx (>=6.1.3)", "sphinx-autodoc-typehints (>=1.22,!=1.23.4)"]
+testing = ["covdefaults (>=2.2.2)", "importlib-metadata (>=6)", "pytest (>=7.2.1)", "pytest-cov (>=4)", "pytest-mock (>=3.10)", "virtualenv (>=20.17.1)", "wheel (>=0.38.4)"]
+
+[[package]]
 name = "pyserial"
 version = "3.5"
 description = "Python Serial Port Extension"
@@ -1210,6 +1282,34 @@ files = [
 ]
 
 [[package]]
+name = "tox"
+version = "4.5.1"
+description = "tox is a generic virtualenv management and test command line tool"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "tox-4.5.1-py3-none-any.whl", hash = "sha256:d25a2e6cb261adc489604fafd76cd689efeadfa79709965e965668d6d3f63046"},
+    {file = "tox-4.5.1.tar.gz", hash = "sha256:5a2eac5fb816779dfdf5cb00fecbc27eb0524e4626626bb1de84747b24cacc56"},
+]
+
+[package.dependencies]
+cachetools = ">=5.3"
+chardet = ">=5.1"
+colorama = ">=0.4.6"
+filelock = ">=3.11"
+packaging = ">=23.1"
+platformdirs = ">=3.2"
+pluggy = ">=1"
+pyproject-api = ">=1.5.1"
+tomli = {version = ">=2.0.1", markers = "python_version < \"3.11\""}
+virtualenv = ">=20.21"
+
+[package.extras]
+docs = ["furo (>=2023.3.27)", "sphinx (>=6.1.3)", "sphinx-argparse-cli (>=1.11)", "sphinx-autodoc-typehints (>=1.23,!=1.23.4)", "sphinx-copybutton (>=0.5.2)", "sphinx-inline-tabs (>=2022.1.2b11)", "sphinxcontrib-towncrier (>=0.2.1a0)", "towncrier (>=22.12)"]
+testing = ["build[virtualenv] (>=0.10)", "covdefaults (>=2.3)", "devpi-process (>=0.3)", "diff-cover (>=7.5)", "distlib (>=0.3.6)", "flaky (>=3.7)", "hatch-vcs (>=0.3)", "hatchling (>=1.14)", "psutil (>=5.9.4)", "pytest (>=7.3.1)", "pytest-cov (>=4)", "pytest-mock (>=3.10)", "pytest-xdist (>=3.2.1)", "re-assert (>=1.1)", "time-machine (>=2.9)", "wheel (>=0.40)"]
+
+[[package]]
 name = "types-pyserial"
 version = "3.5.0.8"
 description = "Typing stubs for pyserial"
@@ -1249,6 +1349,27 @@ files = [
 brotli = ["brotli (>=1.0.9)", "brotlicffi (>=0.8.0)", "brotlipy (>=0.6.0)"]
 secure = ["certifi", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "ipaddress", "pyOpenSSL (>=0.14)", "urllib3-secure-extra"]
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
+
+[[package]]
+name = "virtualenv"
+version = "20.23.0"
+description = "Virtual Python Environment builder"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "virtualenv-20.23.0-py3-none-any.whl", hash = "sha256:6abec7670e5802a528357fdc75b26b9f57d5d92f29c5462ba0fbe45feacc685e"},
+    {file = "virtualenv-20.23.0.tar.gz", hash = "sha256:a85caa554ced0c0afbd0d638e7e2d7b5f92d23478d05d17a76daeac8f279f924"},
+]
+
+[package.dependencies]
+distlib = ">=0.3.6,<1"
+filelock = ">=3.11,<4"
+platformdirs = ">=3.2,<4"
+
+[package.extras]
+docs = ["furo (>=2023.3.27)", "proselint (>=0.13)", "sphinx (>=6.1.3)", "sphinx-argparse (>=0.4)", "sphinxcontrib-towncrier (>=0.2.1a0)", "towncrier (>=22.12)"]
+test = ["covdefaults (>=2.3)", "coverage (>=7.2.3)", "coverage-enable-subprocess (>=1)", "flaky (>=3.7)", "packaging (>=23.1)", "pytest (>=7.3.1)", "pytest-env (>=0.8.1)", "pytest-freezegun (>=0.4.2)", "pytest-mock (>=3.10)", "pytest-randomly (>=3.12)", "pytest-timeout (>=2.1)", "setuptools (>=67.7.1)", "time-machine (>=2.9)"]
 
 [[package]]
 name = "watchdog"
@@ -1309,4 +1430,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "5c0a33bb619f73905508b45149570ce851077de26362f23c12a1c8e107a36fbc"
+content-hash = "8f22fc4316bd6bc353d5d88360ea46d1e4a9311becf9b3070464ff48b2e59320"
