@@ -25,7 +25,7 @@ from .exceptions import (
     IncorrectCommandCodeException,
 )
 
-from typing import Protocol, Union, runtime_checkable
+from typing import Protocol, Union, Optional, runtime_checkable
 
 
 @runtime_checkable
@@ -36,7 +36,7 @@ class SerialLike(Protocol):
         """Read data from the device."""
         pass
 
-    def write(self, data: bytes) -> int:
+    def write(self, data: bytes) -> Optional[int]:
         """Write data from the device."""
         pass
 
@@ -64,7 +64,7 @@ class SDS011Reader:
             send_command_sleep: The number of seconds to sleep after sending a command to the device.
         """
         if isinstance(ser_dev, str):
-            self.ser: serial.Serial = serial.Serial(ser_dev, timeout=2)
+            self.ser: SerialLike = serial.Serial(ser_dev, timeout=2)
         elif isinstance(ser_dev, SerialLike):
             self.ser = ser_dev
         else:

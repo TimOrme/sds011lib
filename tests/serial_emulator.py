@@ -8,6 +8,7 @@ from sds011lib.constants import (
     SleepState,
 )
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass(frozen=True)
@@ -69,7 +70,7 @@ class Sds011SerialEmulator:
             HEAD + response_type.value + cmd_and_id + read_checksum(cmd_and_id) + TAIL
         )
 
-    def write(self, data: bytes) -> int:
+    def write(self, data: bytes) -> Optional[int]:
         """Write to the emulator."""
         last_write = parse_write_data(data)
         self.operation_type = last_write.raw_body_data[1:2]
