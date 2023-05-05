@@ -6,13 +6,16 @@ on:
 jobs:
   checkpr:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [ "3.8", "3.9", "3.10", "3.11" ]
     steps:
       - uses: actions/checkout@v2
       - name: Setup just
         uses: extractions/setup-just@v1
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: ${{ matrix.python }}
       - name: Install poetry
         uses: Gr1N/setup-poetry@v8
       - name: Install dev dependencies
@@ -21,5 +24,6 @@ jobs:
           POETRY_VIRTUALENVS_CREATE: false
       - name: Check linting
         run: just lint
-      - name: Run tests
-        run: just test
+      - name: Run tox
+        run: tox -e py
+
