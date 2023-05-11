@@ -3,6 +3,8 @@ site_name: SDS011lib
 theme:
   name: material
 
+repo_url: https://github.com/TimOrme/sds011lib
+
 nav:
   - 'index.md'
   - 'understanding.md'

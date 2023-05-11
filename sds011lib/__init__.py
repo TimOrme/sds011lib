@@ -71,9 +71,9 @@ class SDS011Reader:
             raise AttributeError("ser_dev must be a string or Serial-like object.")
         self.send_command_sleep = send_command_sleep
 
-    def request_data(self) -> None:
+    def request_data(self, device_id: bytes = con.ALL_SENSOR_ID) -> None:
         """Submit a request to the device to return pollutant data."""
-        cmd = con.Command.QUERY.value + (b"\x00" * 12) + con.ALL_SENSOR_ID
+        cmd = con.Command.QUERY.value + (b"\x00" * 12) + device_id
         self._send_command(cmd)
 
     def query_data(self) -> QueryResponse:
@@ -85,14 +85,14 @@ class SDS011Reader:
         """
         return QueryResponse(self._read_response())
 
-    def request_reporting_mode(self) -> None:
+    def request_reporting_mode(self, device_id: bytes = con.ALL_SENSOR_ID) -> None:
         """Submit a request to the device to return the current reporting mode."""
         cmd = (
             con.Command.SET_REPORTING_MODE.value
             + con.OperationType.QUERY.value
             + con.ReportingMode.ACTIVE.value
             + (b"\x00" * 10)
-            + con.ALL_SENSOR_ID
+            + device_id
         )
         self._send_command(cmd)
 
@@ -127,7 +127,9 @@ class SDS011Reader:
         except IncorrectCommandCodeException:
             pass
 
-    def _set_reporting_mode(self, reporting_mode: con.ReportingMode) -> None:
+    def _set_reporting_mode(
+        self, reporting_mode: con.ReportingMode, device_id: bytes = con.ALL_SENSOR_ID
+    ) -> None:
         """Set the reporting mode, either ACTIVE or QUERYING.
 
         ACTIVE mode means the device will always return a Query command response when data is asked for, regardless of
@@ -139,27 +141,28 @@ class SDS011Reader:
 
         Args:
             reporting_mode: The reporting mode to set.
+            device_id: The device ID to set reporting mode on.
         """
         cmd = (
             con.Command.SET_REPORTING_MODE.value
             + con.OperationType.SET_MODE.value
             + reporting_mode.value
             + (b"\x00" * 10)
-            + con.ALL_SENSOR_ID
+            + device_id
         )
         self._send_command(cmd)
         # Switching between reporting modes is finicky; resetting the serial connection seems to address issues.
         self.ser.close()
         self.ser.open()
 
-    def request_sleep_state(self) -> None:
+    def request_sleep_state(self, device_id: bytes = con.ALL_SENSOR_ID) -> None:
         """Submit a request to get the current sleep state."""
         cmd = (
             con.Command.SET_SLEEP.value
             + con.OperationType.QUERY.value
             + b"\x00"
             + (b"\x00" * 10)
-            + con.ALL_SENSOR_ID
+            + device_id
         )
         self._send_command(cmd)
 
@@ -171,36 +174,39 @@ class SDS011Reader:
         """
         return SleepWakeReadResponse(self._read_response())
 
-    def set_sleep_state(self, sleep_state: con.SleepState) -> None:
+    def set_sleep_state(
+        self, sleep_state: con.SleepState, device_id: bytes = con.ALL_SENSOR_ID
+    ) -> None:
         """Set the sleep state, either wake or sleep.
 
         Args:
             sleep_state: The sleep state to set, either SleepState.WAKE or SleepState.SLEEP
+            device_id: The device ID to sleep or wake.
         """
         cmd = (
             con.Command.SET_SLEEP.value
             + con.OperationType.SET_MODE.value
             + sleep_state.value
             + (b"\x00" * 10)
-            + con.ALL_SENSOR_ID
+            + device_id
         )
         self._send_command(cmd)
 
-    def sleep(self) -> None:
+    def sleep(self, device_id: bytes = con.ALL_SENSOR_ID) -> None:
         """Put the device to sleep, turning off fan and diode."""
-        self.set_sleep_state(con.SleepState.SLEEP)
+        self.set_sleep_state(con.SleepState.SLEEP, device_id)
 
-    def wake(self) -> None:
+    def wake(self, device_id: bytes = con.ALL_SENSOR_ID) -> None:
         """Wake the device up to start reading, turning on fan and diode."""
-        self.set_sleep_state(con.SleepState.WAKE)
+        self.set_sleep_state(con.SleepState.WAKE, device_id)
 
-    def safe_wake(self) -> None:
+    def safe_wake(self, device_id: bytes = con.ALL_SENSOR_ID) -> None:
         """Wake the device up, if you don't know what mode its in.
 
         This operates as a fire-and-forget, even in query mode.  You shouldn't have to (and can't) query for a response
         after this command.
         """
-        self.wake()
+        self.wake(device_id=device_id)
         # If we were in query mode, this would flush out the response.  If in active mode, this would be return read
         # data, but we don't care.
         self.ser.read(10)
@@ -236,13 +242,13 @@ class SDS011Reader:
         """
         return DeviceIdResponse(self._read_response())
 
-    def request_working_period(self) -> None:
+    def request_working_period(self, device_id: bytes = con.ALL_SENSOR_ID) -> None:
         """Submit a request to retrieve the current working period for the device."""
         cmd = (
             con.Command.SET_WORKING_PERIOD.value
             + con.OperationType.QUERY.value
             + (b"\x00" * 11)
-            + con.ALL_SENSOR_ID
+            + device_id
         )
         self._send_command(cmd)
 
@@ -255,7 +261,9 @@ class SDS011Reader:
         """
         return WorkingPeriodReadResponse(self._read_response())
 
-    def set_working_period(self, working_period: int) -> None:
+    def set_working_period(
+        self, working_period: int, device_id: bytes = con.ALL_SENSOR_ID
+    ) -> None:
         """Set the working period for the device.
 
         Working period must be between 0 and 30.
@@ -265,6 +273,7 @@ class SDS011Reader:
 
         Args:
             working_period: A value 0-30 to set as the new working period
+            device_id: The device ID to set the working period for.
         """
         if 0 >= working_period >= 30:
             raise AttributeError("Working period must be between 0 and 30")
@@ -273,17 +282,13 @@ class SDS011Reader:
             + con.OperationType.SET_MODE.value
             + bytes([working_period])
             + (b"\x00" * 10)
-            + con.ALL_SENSOR_ID
+            + device_id
         )
         self._send_command(cmd)
 
-    def request_firmware_version(self) -> None:
+    def request_firmware_version(self, device_id: bytes = con.ALL_SENSOR_ID) -> None:
         """Submit a request to retrieve the firmware version from the device."""
-        cmd = (
-            con.Command.CHECK_FIRMWARE_VERSION.value
-            + (b"\x00" * 12)
-            + con.ALL_SENSOR_ID
-        )
+        cmd = con.Command.CHECK_FIRMWARE_VERSION.value + (b"\x00" * 12) + device_id
         self._send_command(cmd)
 
     def query_firmware_version(self) -> CheckFirmwareResponse:
@@ -359,54 +364,74 @@ class SDS011QueryReader:
         self.base_reader = SDS011Reader(
             ser_dev=ser_dev, send_command_sleep=send_command_sleep
         )
-        self.base_reader.safe_wake()
+        self.base_reader.safe_wake(device_id=con.ALL_SENSOR_ID)
         self.base_reader.set_query_mode()
 
-    def query(self) -> QueryResponse:
+    def query(self, device_id: bytes = con.ALL_SENSOR_ID) -> QueryResponse:
         """Query the device for pollutant data.
+
+        Args:
+            device_id: The device ID to get pollutant data for.
 
         Returns:
             The latest pollutant data.
 
         """
-        self.base_reader.request_data()
+        self.base_reader.request_data(device_id=device_id)
         return self.base_reader.query_data()
 
-    def get_reporting_mode(self) -> ReportingModeResponse:
+    def get_reporting_mode(
+        self, device_id: bytes = con.ALL_SENSOR_ID
+    ) -> ReportingModeResponse:
         """Get the current reporting mode of the device.
+
+        Args:
+            device_id: The device ID to get the reporting mode for.
 
         Returns:
             The current reporting mode of the device.
 
         """
-        self.base_reader.request_reporting_mode()
+        self.base_reader.request_reporting_mode(device_id=device_id)
         return self.base_reader.query_reporting_mode()
 
-    def get_sleep_state(self) -> SleepWakeReadResponse:
+    def get_sleep_state(
+        self, device_id: bytes = con.ALL_SENSOR_ID
+    ) -> SleepWakeReadResponse:
         """Get the current sleep state.
+
+        Args:
+            device_id: The device ID to get the sleep state for.
 
         Returns:
             The current sleep state of the device.
         """
-        self.base_reader.request_sleep_state()
+        self.base_reader.request_sleep_state(device_id=device_id)
         return self.base_reader.query_sleep_state()
 
-    def sleep(self) -> SleepWakeReadResponse:
+    def sleep(self, device_id: bytes = con.ALL_SENSOR_ID) -> SleepWakeReadResponse:
         """Put the device to sleep, turning off fan and diode.
 
+        Args:
+            device_id: The device ID to put to sleep.
+
         Returns:
             The new sleep state of the device.
         """
-        self.base_reader.sleep()
+        self.base_reader.sleep(device_id=device_id)
         return self.base_reader.query_sleep_state()
 
-    def wake(self) -> SleepWakeReadResponse:
+    def wake(self, device_id: bytes = con.ALL_SENSOR_ID) -> SleepWakeReadResponse:
         """Wake the device up to start reading, turning on the fan and diode.
+
+        Args:
+            device_id: The device ID to wake up.
+
 
         Returns:
             The new sleep state of the device.
         """
-        self.base_reader.wake()
+        self.base_reader.wake(device_id=device_id)
         return self.base_reader.query_sleep_state()
 
     def set_device_id(
@@ -421,19 +446,28 @@ class SDS011QueryReader:
         Returns:
             A response with the new device ID.
         """
-        self.base_reader.set_device_id(device_id, target_device_id)
+        self.base_reader.set_device_id(
+            device_id=device_id, target_device_id=target_device_id
+        )
         return self.base_reader.query_device_id()
 
-    def get_working_period(self) -> WorkingPeriodReadResponse:
+    def get_working_period(
+        self, device_id: bytes = con.ALL_SENSOR_ID
+    ) -> WorkingPeriodReadResponse:
         """Retrieve the current working period for the device.
+
+        Args:
+            device_id: The device ID to get the working period for.
 
         Returns:
             A response with the current working period.
         """
-        self.base_reader.request_working_period()
+        self.base_reader.request_working_period(device_id=device_id)
         return self.base_reader.query_working_period()
 
-    def set_working_period(self, working_period: int) -> WorkingPeriodReadResponse:
+    def set_working_period(
+        self, working_period: int, device_id: bytes = con.ALL_SENSOR_ID
+    ) -> WorkingPeriodReadResponse:
         """Set the working period for the device.
 
         Working period must be between 0 and 30.
@@ -443,22 +477,30 @@ class SDS011QueryReader:
 
         Args:
             working_period: A value 0-30 to set as the new working period
+            device_id: The device ID to set the working period for.
 
         Returns:
             A response with the new working period
 
         """
-        self.base_reader.set_working_period(working_period)
+        self.base_reader.set_working_period(
+            working_period=working_period, device_id=device_id
+        )
         return self.base_reader.query_working_period()
 
-    def get_firmware_version(self) -> CheckFirmwareResponse:
+    def get_firmware_version(
+        self, device_id: bytes = con.ALL_SENSOR_ID
+    ) -> CheckFirmwareResponse:
         """Retrieve the firmware version from the device.
+
+        Args:
+            device_id: The device ID to retrieve firmware version for.
 
         Returns:
             The firmware version of the device
 
         """
-        self.base_reader.request_firmware_version()
+        self.base_reader.request_firmware_version(device_id=device_id)
         return self.base_reader.query_firmware_version()
 
 
@@ -491,9 +533,13 @@ class SDS011ActiveReader:
         """
         return self.base_reader.query_data()
 
-    def sleep(self) -> None:
-        """Put the device to sleep, turning off fan and diode."""
-        self.base_reader.sleep()
+    def sleep(self, device_id: bytes = con.ALL_SENSOR_ID) -> None:
+        """Put the device to sleep, turning off fan and diode.
+
+        Args:
+            device_id: The device ID to put to sleep.
+        """
+        self.base_reader.sleep(device_id)
 
         # Sleep seems to behave very strangely in active mode.  It continually outputs data for old commands for quite
         # a while before eventually having nothing to report.  This forces it to "drain" whatever it was doing before
@@ -501,9 +547,13 @@ class SDS011ActiveReader:
         while len(self.ser_dev.read(10)) == 10:
             pass
 
-    def wake(self) -> None:
-        """Wake the device up to start reading, turning on the fan and diode."""
-        self.base_reader.wake()
+    def wake(self, device_id: bytes = con.ALL_SENSOR_ID) -> None:
+        """Wake the device up to start reading, turning on the fan and diode.
+
+        Args:
+            device_id: The device ID to wake up.
+        """
+        self.base_reader.wake(device_id)
         self.ser_dev.read(10)
 
     def set_device_id(
@@ -521,7 +571,9 @@ class SDS011ActiveReader:
         self.base_reader.set_device_id(device_id, target_device_id)
         self.ser_dev.read(10)
 
-    def set_working_period(self, working_period: int) -> None:
+    def set_working_period(
+        self, working_period: int, device_id: bytes = con.ALL_SENSOR_ID
+    ) -> None:
         """Set the working period for the device.
 
         Working period must be between 0 and 30.
@@ -531,9 +583,10 @@ class SDS011ActiveReader:
 
         Args:
             working_period: A value 0-30 to set as the new working period
+            device_id: The device ID to set the working period for.
 
         Returns:
             A response with the new working period
         """
-        self.base_reader.set_working_period(working_period)
+        self.base_reader.set_working_period(working_period, device_id)
         self.ser_dev.read(10)
