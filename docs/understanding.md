@@ -6,6 +6,13 @@
     in "unexpected" ways, but these might just be my misunderstanding of it's intended usage.  Without more official
     documentation, it's hard to know if the explanations outlined here are actually correct. 
 
+The SDS011 is a small, low-cost sensor created by www.inovafitness.com, used to measure particulate matter in the air.  It 
+can measure both PM 2.5 and PM10 values simultaneously, and connects to devices over a serial port, or via USB with an
+included adaptor.
+
+Because of its size and cost, it is often used on DIY projects with the [Raspberry Pi](https://www.raspberrypi.org/), 
+or [Arduino](https://www.arduino.cc/) boards, though it can be used on many other devices as well. 
+
 ## Features
 
 ### Pollutants
