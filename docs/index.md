@@ -113,10 +113,3 @@ result = reader.query()
 # See that the device ID is set
 print(result.device_id)
 ```
-
-## Not Yet Implemented
-
-### Full Device ID Support
-
-You can current set and query the device ID, but not all commands are implemented with the ability to send to a specific
-device.  This will be added in a future version.
