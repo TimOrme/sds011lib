@@ -1,10 +1,10 @@
 # Introduction
 
-`sds011lib` is a fully-typed, nearly-complete, python3 library for interacting with the SDS011 Air Quality Sensor.
+`sds011lib` is a fully-typed, nearly-complete, python 3.8+ library for interacting with the SDS011 Air Quality Sensor.
 
 ## Installation
 
-`sds011lib` requires Python3.6+.
+`sds011lib` requires Python3.8+.
 
 ```commandline
 pip install sds011lib
