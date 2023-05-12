@@ -14,10 +14,9 @@ pip install sds011lib
 
 ```python
 from sds011lib import SDS011QueryReader
-from serial import Serial
 
 # Setup a query-mode reader on /dev/ttyUSB0 
-sensor = SDS011QueryReader(ser_dev=Serial('/dev/ttyUSB0', timeout=2))
+sensor = SDS011QueryReader('/dev/ttyUSB0')
 
 # Read some data!
 aqi = sensor.query()
@@ -37,10 +36,9 @@ sensor.wake()
 
 ```python
 from sds011lib import SDS011QueryReader
-import serial
 
 # Create a query mode reader.
-reader = SDS011QueryReader(ser_dev=serial.Serial('/dev/ttyUSB0', timeout=2))
+reader = SDS011QueryReader('/dev/ttyUSB0')
 
 # Query the device
 result = reader.query()
@@ -54,10 +52,9 @@ print(f"PM 10: {result.pm10}")
 
 ```python
 from sds011lib import SDS011QueryReader
-import serial
 
 # Create a query mode reader.
-reader = SDS011QueryReader(ser_dev=serial.Serial('/dev/ttyUSB0', timeout=2))
+reader = SDS011QueryReader('/dev/ttyUSB0')
 
 # Put the device to sleep.
 reader.sleep()
@@ -76,10 +73,9 @@ print(result.state)
 
 ```python
 from sds011lib import SDS011QueryReader
-import serial
 
 # Create a query mode reader.
-reader = SDS011QueryReader(ser_dev=serial.Serial('/dev/ttyUSB0', timeout=2))
+reader = SDS011QueryReader('/dev/ttyUSB0')
 
 # Set the working period to every 2 minutes
 reader.set_working_period(2)
@@ -99,10 +95,9 @@ reader.set_working_period(0)
 
 ```python
 from sds011lib import SDS011QueryReader
-import serial
 
 # Create a query mode reader.
-reader = SDS011QueryReader(ser_dev=serial.Serial('/dev/ttyUSB0', timeout=2))
+reader = SDS011QueryReader('/dev/ttyUSB0')
 
 # Set the ID
 reader.set_device_id(b"\xC1\x4B")

@@ -23,7 +23,7 @@ from sds011lib import SDS011QueryReader
 from serial import Serial
 
 # Setup a query-mode reader on /dev/ttyUSB0 
-sensor = SDS011QueryReader(ser_dev=Serial('/dev/ttyUSB0', timeout=2))
+sensor = SDS011QueryReader('/dev/ttyUSB0')
 
 # Read some data!
 aqi = sensor.query()
