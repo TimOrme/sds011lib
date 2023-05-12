@@ -150,6 +150,14 @@ class TestBaseReader:
         result2 = reader.query_reporting_mode()
         assert result2.device_id == new_device_id
 
+    def test_set_device_id_wrong_size(self, reader: SDS011Reader) -> None:
+        reader.set_query_mode()
+        with pytest.raises(AttributeError):
+            reader.set_device_id(b"\xbb\xaa\x42")
+
+        with pytest.raises(AttributeError):
+            reader.set_device_id(b"\xbb")
+
     def test_sleep_query_mode(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         reader.sleep()
@@ -191,6 +199,14 @@ class TestBaseReader:
         reader.set_active_mode()
         reader.set_working_period(10)
 
+    def test_set_working_period_invalid_setting(self, reader: SDS011Reader) -> None:
+        reader.set_query_mode()
+        with pytest.raises(AttributeError):
+            reader.set_working_period(40)
+
+        with pytest.raises(AttributeError):
+            reader.set_working_period(-1)
+
     def test_get_working_period_query_mode(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         reader.set_working_period(10)
@@ -214,6 +230,10 @@ class TestBaseReader:
         reader.set_active_mode()
         with pytest.raises(IncorrectCommandException):
             reader.query_firmware_version()
+
+    def test_raises_if_not_serial_or_string(self) -> None:
+        with pytest.raises(AttributeError):
+            SDS011Reader(1234)  # type: ignore
 
 
 class TestActiveModeReader:

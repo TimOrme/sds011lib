@@ -34,19 +34,15 @@ class SerialLike(Protocol):
 
     def read(self, size: int) -> bytes:
         """Read data from the device."""
-        pass
 
     def write(self, data: bytes) -> Optional[int]:
         """Write data from the device."""
-        pass
 
     def open(self) -> None:
         """Open a connection to the device."""
-        pass
 
     def close(self) -> None:
         """Close a connection to the device."""
-        pass
 
 
 class SDS011Reader:
@@ -275,7 +271,7 @@ class SDS011Reader:
             working_period: A value 0-30 to set as the new working period
             device_id: The device ID to set the working period for.
         """
-        if 0 >= working_period >= 30:
+        if working_period < 0 or working_period > 30:
             raise AttributeError("Working period must be between 0 and 30")
         cmd = (
             con.Command.SET_WORKING_PERIOD.value
