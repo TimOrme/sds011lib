@@ -2,6 +2,10 @@
 
 `sds011lib` is a fully-typed, nearly-complete, python 3.8+ library for interacting with the SDS011 Air Quality Sensor.
 
+The SDS011 is a small, low-cost sensor created by www.inovafitness.com, used to measure particulate matter in the air.  It 
+can measure both PM 2.5 and PM10 values simultaneously, and connects to devices over a serial port, or via USB with an
+included adaptor.
+
 ## Installation
 
 `sds011lib` requires Python3.8+.
