@@ -2,7 +2,7 @@
 
 Creates and validates typed classes from binary responses from the device.
 """
-from .constants import (
+from ._constants import (
     SleepState,
     OperationType,
     ReportingMode,

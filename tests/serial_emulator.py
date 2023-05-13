@@ -1,4 +1,4 @@
-from sds011lib.constants import (
+from sds011lib._constants import (
     HEAD,
     TAIL,
     Command,

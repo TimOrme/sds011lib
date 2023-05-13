@@ -1,7 +1,7 @@
 import pytest
 
 from sds011lib import SDS011Reader, SDS011ActiveReader, SDS011QueryReader
-from sds011lib.constants import ReportingMode, SleepState
+from sds011lib._constants import ReportingMode, SleepState
 from sds011lib.exceptions import (
     IncorrectCommandException,
     IncompleteReadException,
