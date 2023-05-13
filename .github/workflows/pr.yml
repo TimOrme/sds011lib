@@ -27,3 +27,21 @@ jobs:
       - name: Run tox
         run: tox -e py
 
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Install poetry
+        uses: Gr1N/setup-poetry@v8
+      - name: Install dev dependencies
+        run: poetry install --no-root
+        env:
+          POETRY_VIRTUALENVS_CREATE: false
+      - name: Run coverage
+        run: pytest --cov-report xml --cov sds011lib/ tests/
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
