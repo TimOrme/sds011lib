@@ -23,9 +23,12 @@ from .exceptions import (
     IncompleteReadException,
     IncorrectCommandException,
     IncorrectCommandCodeException,
+    ChecksumFailedException,
+    IncorrectWrapperException,
 )
 
 from typing import Protocol, Union, Optional, runtime_checkable
+from dataclasses import dataclass
 
 
 @runtime_checkable
@@ -43,6 +46,31 @@ class SerialLike(Protocol):
 
     def close(self) -> None:
         """Close a connection to the device."""
+
+
+@dataclass(frozen=True)
+class _RawReadResponse:
+    """Generic read response object for responses from SDS011.
+
+    Attributes:
+        head: The header bytes from the response
+        cmd_id: The command ID from the response
+        data: The data packet bytes from the response.
+        device_id: The device ID from the response
+        checksum: The returned checksum for the response
+        tail: The tail bytes from the response
+        expected_command_code: The expected command code
+        expected_response_type: The expected response type, either GENERAL or QUERY.
+    """
+
+    head: bytes
+    cmd_id: bytes
+    data: bytes
+    device_id: bytes
+    checksum: int
+    tail: bytes
+    expected_command_code: con.Command
+    expected_response_type: con.ResponseType
 
 
 class SDS011Reader:
@@ -79,7 +107,7 @@ class SDS011Reader:
             Pollutant data from the device.
 
         """
-        return QueryResponse(self._read_response())
+        return self._parse_query_response(self._read_response())
 
     def request_reporting_mode(self, device_id: bytes = con.ALL_SENSOR_ID) -> None:
         """Submit a request to the device to return the current reporting mode."""
@@ -99,7 +127,7 @@ class SDS011Reader:
             The current reporting mode of the device.
 
         """
-        return ReportingModeResponse(self._read_response())
+        return self._parse_reporting_mode_response(self._read_response())
 
     def set_active_mode(self) -> None:
         """Set the reporting mode to active."""
@@ -168,7 +196,7 @@ class SDS011Reader:
         Returns:
             The current sleep state of the device.
         """
-        return SleepWakeReadResponse(self._read_response())
+        return self._parse_sleep_wake_response(self._read_response())
 
     def set_sleep_state(
         self, sleep_state: con.SleepState, device_id: bytes = con.ALL_SENSOR_ID
@@ -236,7 +264,7 @@ class SDS011Reader:
             The current device ID.
 
         """
-        return DeviceIdResponse(self._read_response())
+        return self._parse_device_id_response(self._read_response())
 
     def request_working_period(self, device_id: bytes = con.ALL_SENSOR_ID) -> None:
         """Submit a request to retrieve the current working period for the device."""
@@ -255,7 +283,7 @@ class SDS011Reader:
             The current working period set for the device.
 
         """
-        return WorkingPeriodReadResponse(self._read_response())
+        return self._parse_working_period_reponse(self._read_response())
 
     def set_working_period(
         self, working_period: int, device_id: bytes = con.ALL_SENSOR_ID
@@ -294,7 +322,7 @@ class SDS011Reader:
             The firmware version from the device.
 
         """
-        return CheckFirmwareResponse(self._read_response())
+        return self._parse_firmware_response(self._read_response())
 
     def _send_command(self, cmd: bytes) -> None:
         """Send a command to the device as bytes.
@@ -344,6 +372,125 @@ class SDS011Reader:
         """
         if len(data) != 15:
             raise AttributeError("Invalid checksum length.")
+        return sum(d for d in data) % 256
+
+    def _parse_read_response(
+        self,
+        data: bytes,
+        command_code: con.Command,
+        response_type: con.ResponseType = con.ResponseType.GENERAL_RESPONSE,
+    ) -> _RawReadResponse:
+        """Create a read response."""
+        if len(data) != 10:
+            raise IncompleteReadException()
+
+        head: bytes = data[0:1]
+        cmd_id: bytes = data[1:2]
+        payload: bytes = data[2:8]
+        device_id: bytes = data[6:8]
+        checksum: int = data[8]
+        tail: bytes = data[9:10]
+        expected_command_code: con.Command = command_code
+        expected_response_type: con.ResponseType = response_type
+        result = _RawReadResponse(
+            head=head,
+            cmd_id=cmd_id,
+            data=payload,
+            device_id=device_id,
+            checksum=checksum,
+            tail=tail,
+            expected_command_code=expected_command_code,
+            expected_response_type=expected_response_type,
+        )
+        self._verify(result)
+        return result
+
+    def _parse_query_response(self, data: bytes) -> QueryResponse:
+        """Create a query read response."""
+        raw_response = self._parse_read_response(
+            data, con.Command.QUERY, con.ResponseType.QUERY_RESPONSE
+        )
+
+        pm25: float = int.from_bytes(raw_response.data[2:4], byteorder="little") / 10
+        pm10: float = int.from_bytes(raw_response.data[4:6], byteorder="little") / 10
+        return QueryResponse(pm25=pm25, pm10=pm10, device_id=raw_response.device_id)
+
+    def _parse_reporting_mode_response(self, data: bytes) -> ReportingModeResponse:
+        """Create a reporting mode response."""
+        raw_response = self._parse_read_response(
+            data, command_code=con.Command.SET_REPORTING_MODE
+        )
+        operation_type: con.OperationType = con.OperationType(raw_response.data[1:2])
+        state: con.ReportingMode = con.ReportingMode(raw_response.data[2:3])
+        return ReportingModeResponse(operation_type, state)
+
+    def _parse_device_id_response(self, data: bytes) -> DeviceIdResponse:
+        """Create a device ID response."""
+        raw_response = self._parse_read_response(
+            data, command_code=con.Command.SET_DEVICE_ID
+        )
+        return DeviceIdResponse(device_id=raw_response.device_id)
+
+    def _parse_sleep_wake_response(self, data: bytes) -> SleepWakeReadResponse:
+        """Create a sleep/wake response."""
+        raw_response = self._parse_read_response(
+            data, command_code=con.Command.SET_SLEEP
+        )
+        operation_type: con.OperationType = con.OperationType(raw_response.data[1:2])
+        state: con.SleepState = con.SleepState(raw_response.data[2:3])
+        return SleepWakeReadResponse(operation_type=operation_type, state=state)
+
+    def _parse_working_period_reponse(self, data: bytes) -> WorkingPeriodReadResponse:
+        """Create a working period response."""
+        raw_response = self._parse_read_response(
+            data, command_code=con.Command.SET_WORKING_PERIOD
+        )
+        operation_type: con.OperationType = con.OperationType(raw_response.data[1:2])
+        interval: int = raw_response.data[2]
+        return WorkingPeriodReadResponse(
+            operation_type=operation_type, interval=interval
+        )
+
+    def _parse_firmware_response(self, data: bytes) -> CheckFirmwareResponse:
+        """Create a firmware response."""
+        raw_response = self._parse_read_response(
+            data, command_code=con.Command.CHECK_FIRMWARE_VERSION
+        )
+        year: int = raw_response.data[1]
+        month: int = raw_response.data[2]
+        day: int = raw_response.data[3]
+        return CheckFirmwareResponse(year=year, month=month, day=day)
+
+    def _verify(self, read_response: _RawReadResponse) -> None:
+        """Verify the read data."""
+        if read_response.head != con.HEAD:
+            raise IncorrectWrapperException()
+        if read_response.tail != con.TAIL:
+            raise IncorrectWrapperException()
+        if read_response.checksum != self._calc_checksum(read_response.data):
+            raise ChecksumFailedException(
+                expected=read_response.checksum,
+                actual=self._calc_checksum(read_response.data),
+            )
+        if read_response.cmd_id != read_response.expected_response_type.value:
+            raise IncorrectCommandException(
+                expected=read_response.expected_response_type.value,
+                actual=read_response.cmd_id,
+            )
+
+        # Query responses don't validate the command code
+        if (
+            read_response.expected_response_type != con.ResponseType.QUERY_RESPONSE
+            and bytes([read_response.data[0]])
+            != read_response.expected_command_code.value
+        ):
+            raise IncorrectCommandCodeException(
+                expected=read_response.expected_command_code.value,
+                actual=read_response.data[0:1],
+            )
+
+    def _calc_checksum(self, data: bytes) -> int:
+        """Calculate the checksum for the read data."""
         return sum(d for d in data) % 256
 
 
