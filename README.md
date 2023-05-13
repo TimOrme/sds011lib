@@ -2,6 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/sds011.svg)](https://badge.fury.io/py/sds011)
 ![Main](https://github.com/TimOrme/sds011lib/actions/workflows/main.yml/badge.svg)
+[![Coverage](https://codecov.io/gh/TimOrme/sds011lib/branch/main/graph/badge.svg)](https://codecov.io/gh/TimOrme/sds011lib)
 
 `sds011lib` is a fully-typed, nearly-complete, python 3.8+ library for interacting with the SDS011 Air Quality Sensor.
 
