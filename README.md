@@ -1,6 +1,6 @@
 # sds011lib
 
-[![PyPI version](https://badge.fury.io/py/sds011.svg)](https://badge.fury.io/py/sds011)
+[![PyPI version](https://badge.fury.io/py/sds011lib.svg)](https://badge.fury.io/py/sds011lib)
 ![Main](https://github.com/TimOrme/sds011lib/actions/workflows/main.yml/badge.svg)
 [![Coverage](https://codecov.io/gh/TimOrme/sds011lib/branch/main/graph/badge.svg)](https://codecov.io/gh/TimOrme/sds011lib)
 
