@@ -26,3 +26,5 @@ jobs:
         run: just lint
       - name: Run tox
         run: tox -e py
+      - name: Run coverage
+        run: pytest --cov sds011lib/ tests/
