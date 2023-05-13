@@ -2,16 +2,23 @@ import pytest
 
 from sds011lib import SDS011Reader, SDS011ActiveReader, SDS011QueryReader
 from sds011lib.constants import ReportingMode, SleepState
-from sds011lib.exceptions import IncorrectCommandException, IncompleteReadException
+from sds011lib.exceptions import (
+    IncorrectCommandException,
+    IncompleteReadException,
+    ChecksumFailedException,
+    IncorrectWrapperException,
+)
 from .serial_emulator import Sds011SerialEmulator
 from typing import Generator
+from unittest.mock import Mock, patch
+from serial import Serial
 
 
 class TestBaseReader:
     @pytest.fixture
     def reader(self) -> Generator[SDS011Reader, None, None]:
         # If you want to run these tests an integration you can replace the emulator here with a real serial device.
-        # ser_dev = serial.Serial('/dev/ttyUSB0', timeout=2, baudrate=9600)
+        # ser_dev = Serial('/dev/ttyUSB0', timeout=2, baudrate=9600)
         # reader = SDS011BaseReader(ser_dev=ser_dev)
 
         ser_dev = Sds011SerialEmulator()
@@ -32,6 +39,12 @@ class TestBaseReader:
         # Sleep the reader at the end so its not left on.
         reader.sleep()
         ser_dev.close()
+
+    @patch("serial.Serial")
+    def test_string_constructor(self, serial_constructor: Mock) -> None:
+        # Test that we can construct a serial device from a string.
+        SDS011Reader("/dev/some_fake_dev")
+        serial_constructor.assert_called_with("/dev/some_fake_dev", timeout=2)
 
     def test_hammer_reporting_mode(self, reader: SDS011Reader) -> None:
         # Switch the modes
@@ -146,9 +159,17 @@ class TestBaseReader:
         assert result.device_id == new_device_id
 
         # Verify other commands also report correct ID
-        reader.request_reporting_mode()
-        result2 = reader.query_reporting_mode()
+        reader.request_data()
+        result2 = reader.query_data()
         assert result2.device_id == new_device_id
+
+    def test_set_device_id_wrong_size(self, reader: SDS011Reader) -> None:
+        reader.set_query_mode()
+        with pytest.raises(AttributeError):
+            reader.set_device_id(b"\xbb\xaa\x42")
+
+        with pytest.raises(AttributeError):
+            reader.set_device_id(b"\xbb")
 
     def test_sleep_query_mode(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
@@ -191,6 +212,14 @@ class TestBaseReader:
         reader.set_active_mode()
         reader.set_working_period(10)
 
+    def test_set_working_period_invalid_setting(self, reader: SDS011Reader) -> None:
+        reader.set_query_mode()
+        with pytest.raises(AttributeError):
+            reader.set_working_period(40)
+
+        with pytest.raises(AttributeError):
+            reader.set_working_period(-1)
+
     def test_get_working_period_query_mode(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         reader.set_working_period(10)
@@ -215,12 +244,90 @@ class TestBaseReader:
         with pytest.raises(IncorrectCommandException):
             reader.query_firmware_version()
 
+    def test_raises_if_not_serial_or_string(self) -> None:
+        with pytest.raises(AttributeError):
+            SDS011Reader(1234)  # type: ignore
+
+    def test_bad_checksum(self, reader: SDS011Reader) -> None:
+        ser_dev = Mock(spec=Serial)
+        ser_dev.read.side_effect = [b"\xaa\x01\x01\x01\x01\x01\x01\x01\x03\xab"]
+        reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
+
+        with pytest.raises(ChecksumFailedException):
+            reader.query_data()
+
+    def test_bad_wrapper_head(self, reader: SDS011Reader) -> None:
+        ser_dev = Mock(spec=Serial)
+        # Set the head to be the wrong value
+        ser_dev.read.side_effect = [b"\xab\x01\x01\x01\x01\x01\x01\x01\x03\xab"]
+        reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
+
+        with pytest.raises(IncorrectWrapperException):
+            reader.query_data()
+
+    def test_bad_wrapper_tail(self, reader: SDS011Reader) -> None:
+        ser_dev = Mock(spec=Serial)
+        # Set the tail to be the wrong value
+        ser_dev.read.side_effect = [b"\xaa\x01\x01\x01\x01\x01\x01\x01\x03\xac"]
+        reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
+
+        with pytest.raises(IncorrectWrapperException):
+            reader.query_data()
+
+    def test_incomplete_read(self, reader: SDS011Reader) -> None:
+        ser_dev = Mock(spec=Serial)
+        # Give back less than 10 bytes
+        ser_dev.read.side_effect = [b"\xaa\x01\x01\x01\x01\x01"]
+        reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
+
+        with pytest.raises(IncompleteReadException):
+            reader.query_data()
+
+    def test_set_active_mode_ignores_incomplete_reads(
+        self, reader: SDS011Reader
+    ) -> None:
+        ser_dev = Mock(spec=Serial)
+        # Give back less than 10 bytes
+        ser_dev.read.side_effect = [b"\xaa\x01\x01\x01\x01\x01"]
+        reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
+
+        try:
+            reader.set_active_mode()
+        except Exception:
+            pytest.fail("Unexpected exception")
+
+    def test_set_query_mode_ignores_incomplete_reads(
+        self, reader: SDS011Reader
+    ) -> None:
+        ser_dev = Mock(spec=Serial)
+        # Give back less than 10 bytes
+        ser_dev.read.side_effect = [b"\xaa\x01\x01\x01\x01\x01"]
+        reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
+
+        try:
+            reader.set_query_mode()
+        except Exception:
+            pytest.fail("Unexpected exception")
+
+    def test_set_query_mode_ignores_incorrect_command(
+        self, reader: SDS011Reader
+    ) -> None:
+        ser_dev = Mock(spec=Serial)
+        # Give a query mode command instead
+        ser_dev.read.side_effect = [b"\xaa\xc0\x01\x01\x01\x01\x01\x01\x06\xab"]
+        reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
+
+        try:
+            reader.set_query_mode()
+        except Exception:
+            pytest.fail("Unexpected exception")
+
 
 class TestActiveModeReader:
     @pytest.fixture
     def reader(self) -> Generator[SDS011ActiveReader, None, None]:
         # If you want to run these tests an integration you can replace the emulator here with a real serial device.
-        # ser_dev = serial.Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
+        # ser_dev = Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
         # reader = ActiveModeReader(ser_dev=ser_dev, send_command_sleep=5)
 
         ser_dev = Sds011SerialEmulator()
