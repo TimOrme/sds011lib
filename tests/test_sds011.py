@@ -473,30 +473,3 @@ class TestQueryModeReader:
         assert 99 >= result.year >= 0
         assert 12 >= result.month >= 1
         assert 31 >= result.day >= 1
-
-
-class TestBuffer:
-    @pytest.mark.skip()
-    def test_query(self) -> None:
-        ser_dev = Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
-        reader = SDS011Reader(ser_dev=ser_dev)
-
-        reader.set_query_mode()
-        reader.wake()
-
-        # flush everything out of response
-        while len(ser_dev.read(10)) == 10:
-            pass
-
-        count_to = 250
-
-        # Send X commands to the device
-        for i in range(1, count_to):
-            device_id = i.to_bytes(length=2, byteorder="little")
-            reader.set_device_id(device_id)
-
-        # See whats in the buffer.
-        for i in range(1, count_to):
-            x = ser_dev.read(10)
-            device_id2 = int.from_bytes(x[6:8], byteorder="little")
-            assert device_id2 == i

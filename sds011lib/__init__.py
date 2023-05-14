@@ -331,9 +331,6 @@ class SDS011Reader:
             + device_id
         )
         self._send_command(cmd)
-        # Switching between reporting modes is finicky; resetting the serial connection seems to address issues.
-        self.ser.close()
-        self.ser.open()
 
     def request_sleep_state(self, device_id: bytes = ALL_SENSORS) -> None:
         """Submit a request to get the current sleep state."""
