@@ -160,6 +160,9 @@ class TestBaseReader:
         assert pm10_in_range(result.pm10)
 
     def test_query_emulated(self) -> None:
+        # Since the emulator always returns the same values, this lets us assert that the result is an exact number,
+        # instead of a range.  Its possible that we might have a bug if all we do is check range, since we might be
+        # checking the wrong byte data.
         ser_dev = Sds011SerialEmulator()
         reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
         reader.set_query_mode()

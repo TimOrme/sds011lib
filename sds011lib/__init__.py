@@ -98,7 +98,7 @@ def _calc_checksum(data: bytes) -> int:
     return sum(d for d in data) % 256
 
 
-def _verify(read_response: _RawReadResponse) -> None:
+def _verify_read_response(read_response: _RawReadResponse) -> None:
     """Verify read data.
 
     Args:
@@ -109,7 +109,6 @@ def _verify(read_response: _RawReadResponse) -> None:
         ChecksumFailedException: If the checksum from the response is incorrect
         IncorrectCommandException: If the command ID in the response is not the expected one.
         IncorrectCommandCodeException: If the command code in the response is not the expected one.
-
     """
     if read_response.head != HEAD:
         raise IncorrectWrapperException()
@@ -174,49 +173,8 @@ def _parse_read_response(
         expected_command_code=expected_command_code,
         expected_response_type=expected_response_type,
     )
-    _verify(result)
+    _verify_read_response(result)
     return result
-
-
-def _parse_firmware_response(data: bytes) -> CheckFirmwareResponse:
-    """Parse a firmware response."""
-    raw_response = _parse_read_response(
-        data, command_code=Command.CHECK_FIRMWARE_VERSION
-    )
-    year: int = raw_response.payload[1]
-    month: int = raw_response.payload[2]
-    day: int = raw_response.payload[3]
-    return CheckFirmwareResponse(year=year, month=month, day=day)
-
-
-def _parse_working_period_reponse(data: bytes) -> WorkingPeriodReadResponse:
-    """Parse a working period response."""
-    raw_response = _parse_read_response(data, command_code=Command.SET_WORKING_PERIOD)
-    operation_type: OperationType = OperationType(raw_response.payload[1:2])
-    interval: int = raw_response.payload[2]
-    return WorkingPeriodReadResponse(operation_type=operation_type, interval=interval)
-
-
-def _parse_sleep_wake_response(data: bytes) -> SleepWakeReadResponse:
-    """Parse a sleep/wake response."""
-    raw_response = _parse_read_response(data, command_code=Command.SET_SLEEP)
-    operation_type: OperationType = OperationType(raw_response.payload[1:2])
-    state: SleepState = SleepState(raw_response.payload[2:3])
-    return SleepWakeReadResponse(operation_type=operation_type, state=state)
-
-
-def _parse_device_id_response(data: bytes) -> DeviceIdResponse:
-    """Parse a device ID response."""
-    raw_response = _parse_read_response(data, command_code=Command.SET_DEVICE_ID)
-    return DeviceIdResponse(device_id=raw_response.device_id)
-
-
-def _parse_reporting_mode_response(data: bytes) -> ReportingModeResponse:
-    """Parse a reporting mode response."""
-    raw_response = _parse_read_response(data, command_code=Command.SET_REPORTING_MODE)
-    operation_type: OperationType = OperationType(raw_response.payload[1:2])
-    state: ReportingMode = ReportingMode(raw_response.payload[2:3])
-    return ReportingModeResponse(operation_type, state)
 
 
 def _parse_query_response(data: bytes) -> QueryResponse:
@@ -228,6 +186,47 @@ def _parse_query_response(data: bytes) -> QueryResponse:
     pm25: float = int.from_bytes(raw_response.payload[0:2], byteorder="little") / 10
     pm10: float = int.from_bytes(raw_response.payload[2:4], byteorder="little") / 10
     return QueryResponse(pm25=pm25, pm10=pm10, device_id=raw_response.device_id)
+
+
+def _parse_reporting_mode_response(data: bytes) -> ReportingModeResponse:
+    """Parse a reporting mode response."""
+    raw_response = _parse_read_response(data, command_code=Command.SET_REPORTING_MODE)
+    operation_type: OperationType = OperationType(raw_response.payload[1:2])
+    state: ReportingMode = ReportingMode(raw_response.payload[2:3])
+    return ReportingModeResponse(operation_type, state)
+
+
+def _parse_device_id_response(data: bytes) -> DeviceIdResponse:
+    """Parse a device ID response."""
+    raw_response = _parse_read_response(data, command_code=Command.SET_DEVICE_ID)
+    return DeviceIdResponse(device_id=raw_response.device_id)
+
+
+def _parse_sleep_wake_response(data: bytes) -> SleepWakeReadResponse:
+    """Parse a sleep/wake response."""
+    raw_response = _parse_read_response(data, command_code=Command.SET_SLEEP)
+    operation_type: OperationType = OperationType(raw_response.payload[1:2])
+    state: SleepState = SleepState(raw_response.payload[2:3])
+    return SleepWakeReadResponse(operation_type=operation_type, state=state)
+
+
+def _parse_working_period_reponse(data: bytes) -> WorkingPeriodReadResponse:
+    """Parse a working period response."""
+    raw_response = _parse_read_response(data, command_code=Command.SET_WORKING_PERIOD)
+    operation_type: OperationType = OperationType(raw_response.payload[1:2])
+    interval: int = raw_response.payload[2]
+    return WorkingPeriodReadResponse(operation_type=operation_type, interval=interval)
+
+
+def _parse_firmware_response(data: bytes) -> CheckFirmwareResponse:
+    """Parse a firmware response."""
+    raw_response = _parse_read_response(
+        data, command_code=Command.CHECK_FIRMWARE_VERSION
+    )
+    year: int = raw_response.payload[1]
+    month: int = raw_response.payload[2]
+    day: int = raw_response.payload[3]
+    return CheckFirmwareResponse(year=year, month=month, day=day)
 
 
 class SDS011Reader:
