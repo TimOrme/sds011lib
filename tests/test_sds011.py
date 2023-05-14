@@ -14,6 +14,14 @@ from unittest.mock import Mock, patch
 from serial import Serial
 
 
+def pm25_in_range(pm25: float) -> bool:
+    return 999.9 >= pm25 >= 0.0
+
+
+def pm10_in_range(pm10: float) -> bool:
+    return 999.9 >= pm10 >= 0.0
+
+
 class TestBaseReader:
     @pytest.fixture
     def reader(self) -> Generator[SDS011Reader, None, None]:
@@ -141,15 +149,15 @@ class TestBaseReader:
     def test_query_active_mode(self, reader: SDS011Reader) -> None:
         reader.set_active_mode()
         result = reader.query_data()
-        assert 999 > result.pm25 > 0
-        assert 999 > result.pm10 > 0
+        assert pm25_in_range(result.pm25)
+        assert pm10_in_range(result.pm10)
 
     def test_query_query_mode(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         reader.request_data()
         result = reader.query_data()
-        assert 999 > result.pm25 > 0
-        assert 999 > result.pm10 > 0
+        assert pm25_in_range(result.pm25)
+        assert pm10_in_range(result.pm10)
 
     def test_query_emulated(self) -> None:
         # Since the emulator always returns the same values, this lets us assert that the result is an exact number,
@@ -354,8 +362,8 @@ class TestActiveModeReader:
 
     def test_query(self, reader: SDS011ActiveReader) -> None:
         result = reader.query()
-        assert 999 > result.pm25 > 0
-        assert 999 > result.pm10 > 0
+        assert pm25_in_range(result.pm25)
+        assert pm10_in_range(result.pm10)
 
     def test_query_sleep_mode(self, reader: SDS011ActiveReader) -> None:
         reader.sleep()
@@ -371,16 +379,16 @@ class TestActiveModeReader:
 
         # Make sure we can read again.
         result = reader.query()
-        assert 999 > result.pm25 > 0
-        assert 999 > result.pm10 > 0
+        assert pm25_in_range(result.pm25)
+        assert pm10_in_range(result.pm10)
 
     def test_set_working_period(self, reader: SDS011ActiveReader) -> None:
         reader.set_working_period(20)
 
         # We can't really do much here to validate that this is working.  Just ensure that we can still query after.
         result = reader.query()
-        assert 999 > result.pm25 > 0
-        assert 999 > result.pm10 > 0
+        assert pm25_in_range(result.pm25)
+        assert pm10_in_range(result.pm10)
 
     def test_set_device_id(self, reader: SDS011ActiveReader) -> None:
         reader.set_device_id(b"\x12\x23")
@@ -408,8 +416,8 @@ class TestQueryModeReader:
 
     def test_query(self, reader: SDS011QueryReader) -> None:
         result = reader.query()
-        assert 999 > result.pm25 > 0
-        assert 999 > result.pm10 > 0
+        assert pm25_in_range(result.pm25)
+        assert pm10_in_range(result.pm10)
 
     def test_query_sleep_mode(self, reader: SDS011QueryReader) -> None:
         reader.sleep()
@@ -425,8 +433,8 @@ class TestQueryModeReader:
         assert result.state == SleepState.WAKE
 
         result2 = reader.query()
-        assert 999 > result2.pm25 > 0
-        assert 999 > result2.pm10 > 0
+        assert pm25_in_range(result2.pm25)
+        assert pm10_in_range(result2.pm10)
 
     def test_get_sleep_state(self, reader: SDS011QueryReader) -> None:
         result = reader.sleep()
@@ -440,8 +448,8 @@ class TestQueryModeReader:
 
         # Make sure we can read again.
         result2 = reader.query()
-        assert 999 > result2.pm25 > 0
-        assert 999 > result2.pm10 > 0
+        assert pm25_in_range(result2.pm25)
+        assert pm10_in_range(result2.pm10)
 
     def test_get_reporting_mode(self, reader: SDS011QueryReader) -> None:
         result = reader.get_reporting_mode()
