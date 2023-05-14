@@ -265,7 +265,7 @@ class SDS011Reader:
         """
         if len(device_id) != 2 or len(target_device_id) != 2:
             raise AttributeError(
-                f"Device ID must be 4 bytes, found {len(device_id)}, and {len(target_device_id)}"
+                f"Device ID must be 2 bytes, found {len(device_id)}, and {len(target_device_id)}"
             )
         cmd = (
             Command.SET_DEVICE_ID.value + (b"\x00" * 10) + device_id + target_device_id
@@ -435,8 +435,8 @@ class SDS011Reader:
             data, Command.QUERY, ResponseType.QUERY_RESPONSE
         )
 
-        pm25: float = int.from_bytes(raw_response.payload[2:4], byteorder="little") / 10
-        pm10: float = int.from_bytes(raw_response.payload[4:6], byteorder="little") / 10
+        pm25: float = int.from_bytes(raw_response.payload[0:2], byteorder="little") / 10
+        pm10: float = int.from_bytes(raw_response.payload[2:4], byteorder="little") / 10
         return QueryResponse(pm25=pm25, pm10=pm10, device_id=raw_response.device_id)
 
     def _parse_reporting_mode_response(self, data: bytes) -> ReportingModeResponse:

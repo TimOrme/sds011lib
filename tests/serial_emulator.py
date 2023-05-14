@@ -104,7 +104,7 @@ class Sds011SerialEmulator:
         return len(data)
 
     def _get_query_response(self) -> bytes:
-        return self._generate_read(ResponseType.QUERY_RESPONSE, b"\x19\x00\x64\x00")
+        return self._generate_read(ResponseType.QUERY_RESPONSE, b"\xE5\x10\xBF\x14")
 
     def _set_response_buffer(self, data: bytes) -> None:
         # Response buffer should only be written if there wasn't something already there.
