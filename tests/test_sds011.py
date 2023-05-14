@@ -268,7 +268,7 @@ class TestBaseReader:
         with pytest.raises(AttributeError):
             SDS011Reader(1234)  # type: ignore
 
-    def test_bad_checksum(self, reader: SDS011Reader) -> None:
+    def test_bad_checksum(self) -> None:
         ser_dev = Mock(spec=Serial)
         ser_dev.read.side_effect = [b"\xaa\x01\x01\x01\x01\x01\x01\x01\x03\xab"]
         reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
@@ -276,7 +276,7 @@ class TestBaseReader:
         with pytest.raises(ChecksumFailedException):
             reader.query_data()
 
-    def test_bad_wrapper_head(self, reader: SDS011Reader) -> None:
+    def test_bad_wrapper_head(self) -> None:
         ser_dev = Mock(spec=Serial)
         # Set the head to be the wrong value
         ser_dev.read.side_effect = [b"\xab\x01\x01\x01\x01\x01\x01\x01\x03\xab"]
@@ -285,7 +285,7 @@ class TestBaseReader:
         with pytest.raises(IncorrectWrapperException):
             reader.query_data()
 
-    def test_bad_wrapper_tail(self, reader: SDS011Reader) -> None:
+    def test_bad_wrapper_tail(self) -> None:
         ser_dev = Mock(spec=Serial)
         # Set the tail to be the wrong value
         ser_dev.read.side_effect = [b"\xaa\x01\x01\x01\x01\x01\x01\x01\x03\xac"]
@@ -294,7 +294,7 @@ class TestBaseReader:
         with pytest.raises(IncorrectWrapperException):
             reader.query_data()
 
-    def test_incomplete_read(self, reader: SDS011Reader) -> None:
+    def test_incomplete_read(self) -> None:
         ser_dev = Mock(spec=Serial)
         # Give back less than 10 bytes
         ser_dev.read.side_effect = [b"\xaa\x01\x01\x01\x01\x01"]
@@ -303,9 +303,7 @@ class TestBaseReader:
         with pytest.raises(IncompleteReadException):
             reader.query_data()
 
-    def test_set_active_mode_ignores_incomplete_reads(
-        self, reader: SDS011Reader
-    ) -> None:
+    def test_set_active_mode_ignores_incomplete_reads(self) -> None:
         ser_dev = Mock(spec=Serial)
         # Give back less than 10 bytes
         ser_dev.read.side_effect = [b"\xaa\x01\x01\x01\x01\x01"]
@@ -316,9 +314,7 @@ class TestBaseReader:
         except Exception:
             pytest.fail("Unexpected exception")
 
-    def test_set_query_mode_ignores_incomplete_reads(
-        self, reader: SDS011Reader
-    ) -> None:
+    def test_set_query_mode_ignores_incomplete_reads(self) -> None:
         ser_dev = Mock(spec=Serial)
         # Give back less than 10 bytes
         ser_dev.read.side_effect = [b"\xaa\x01\x01\x01\x01\x01"]
@@ -329,9 +325,7 @@ class TestBaseReader:
         except Exception:
             pytest.fail("Unexpected exception")
 
-    def test_set_query_mode_ignores_incorrect_command(
-        self, reader: SDS011Reader
-    ) -> None:
+    def test_set_query_mode_ignores_incorrect_command(self) -> None:
         ser_dev = Mock(spec=Serial)
         # Give a query mode command instead
         ser_dev.read.side_effect = [b"\xaa\xc0\x01\x01\x01\x01\x01\x01\x06\xab"]
