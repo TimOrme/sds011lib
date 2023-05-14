@@ -14,15 +14,23 @@ from unittest.mock import Mock, patch
 from serial import Serial
 
 
+def pm25_in_range(pm25: float) -> bool:
+    return 999.9 >= pm25 >= 0.0
+
+
+def pm10_in_range(pm10: float) -> bool:
+    return 999.9 >= pm10 >= 0.0
+
+
 class TestBaseReader:
     @pytest.fixture
     def reader(self) -> Generator[SDS011Reader, None, None]:
         # If you want to run these tests an integration you can replace the emulator here with a real serial device.
-        # ser_dev = Serial('/dev/ttyUSB0', timeout=2, baudrate=9600)
-        # reader = SDS011BaseReader(ser_dev=ser_dev)
+        ser_dev = Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
+        reader = SDS011Reader(ser_dev=ser_dev)
 
-        ser_dev = Sds011SerialEmulator()
-        reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
+        # ser_dev = Sds011SerialEmulator()
+        # reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
 
         # flush out the reader in case theres leftovers in the buffer
         ser_dev.read(10)
@@ -141,15 +149,24 @@ class TestBaseReader:
     def test_query_active_mode(self, reader: SDS011Reader) -> None:
         reader.set_active_mode()
         result = reader.query_data()
-        assert 999 > result.pm25 > 0
-        assert 999 > result.pm10 > 0
+        assert pm25_in_range(result.pm25)
+        assert pm10_in_range(result.pm10)
 
     def test_query_query_mode(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         reader.request_data()
         result = reader.query_data()
-        assert 999 > result.pm25 > 0
-        assert 999 > result.pm10 > 0
+        assert pm25_in_range(result.pm25)
+        assert pm10_in_range(result.pm10)
+
+    def test_query_emulated(self) -> None:
+        ser_dev = Sds011SerialEmulator()
+        reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
+        reader.set_query_mode()
+        reader.request_data()
+        result = reader.query_data()
+        assert result.pm25 == 432.5
+        assert result.pm10 == 531.1
 
     def test_set_device_id_query_mode(self, reader: SDS011Reader) -> None:
         new_device_id = b"\xbb\xaa"
@@ -248,7 +265,7 @@ class TestBaseReader:
         with pytest.raises(AttributeError):
             SDS011Reader(1234)  # type: ignore
 
-    def test_bad_checksum(self, reader: SDS011Reader) -> None:
+    def test_bad_checksum(self) -> None:
         ser_dev = Mock(spec=Serial)
         ser_dev.read.side_effect = [b"\xaa\x01\x01\x01\x01\x01\x01\x01\x03\xab"]
         reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
@@ -256,7 +273,7 @@ class TestBaseReader:
         with pytest.raises(ChecksumFailedException):
             reader.query_data()
 
-    def test_bad_wrapper_head(self, reader: SDS011Reader) -> None:
+    def test_bad_wrapper_head(self) -> None:
         ser_dev = Mock(spec=Serial)
         # Set the head to be the wrong value
         ser_dev.read.side_effect = [b"\xab\x01\x01\x01\x01\x01\x01\x01\x03\xab"]
@@ -265,7 +282,7 @@ class TestBaseReader:
         with pytest.raises(IncorrectWrapperException):
             reader.query_data()
 
-    def test_bad_wrapper_tail(self, reader: SDS011Reader) -> None:
+    def test_bad_wrapper_tail(self) -> None:
         ser_dev = Mock(spec=Serial)
         # Set the tail to be the wrong value
         ser_dev.read.side_effect = [b"\xaa\x01\x01\x01\x01\x01\x01\x01\x03\xac"]
@@ -274,7 +291,7 @@ class TestBaseReader:
         with pytest.raises(IncorrectWrapperException):
             reader.query_data()
 
-    def test_incomplete_read(self, reader: SDS011Reader) -> None:
+    def test_incomplete_read(self) -> None:
         ser_dev = Mock(spec=Serial)
         # Give back less than 10 bytes
         ser_dev.read.side_effect = [b"\xaa\x01\x01\x01\x01\x01"]
@@ -283,9 +300,7 @@ class TestBaseReader:
         with pytest.raises(IncompleteReadException):
             reader.query_data()
 
-    def test_set_active_mode_ignores_incomplete_reads(
-        self, reader: SDS011Reader
-    ) -> None:
+    def test_set_active_mode_ignores_incomplete_reads(self) -> None:
         ser_dev = Mock(spec=Serial)
         # Give back less than 10 bytes
         ser_dev.read.side_effect = [b"\xaa\x01\x01\x01\x01\x01"]
@@ -296,9 +311,7 @@ class TestBaseReader:
         except Exception:
             pytest.fail("Unexpected exception")
 
-    def test_set_query_mode_ignores_incomplete_reads(
-        self, reader: SDS011Reader
-    ) -> None:
+    def test_set_query_mode_ignores_incomplete_reads(self) -> None:
         ser_dev = Mock(spec=Serial)
         # Give back less than 10 bytes
         ser_dev.read.side_effect = [b"\xaa\x01\x01\x01\x01\x01"]
@@ -309,9 +322,7 @@ class TestBaseReader:
         except Exception:
             pytest.fail("Unexpected exception")
 
-    def test_set_query_mode_ignores_incorrect_command(
-        self, reader: SDS011Reader
-    ) -> None:
+    def test_set_query_mode_ignores_incorrect_command(self) -> None:
         ser_dev = Mock(spec=Serial)
         # Give a query mode command instead
         ser_dev.read.side_effect = [b"\xaa\xc0\x01\x01\x01\x01\x01\x01\x06\xab"]
@@ -327,23 +338,27 @@ class TestActiveModeReader:
     @pytest.fixture
     def reader(self) -> Generator[SDS011ActiveReader, None, None]:
         # If you want to run these tests an integration you can replace the emulator here with a real serial device.
-        # ser_dev = Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
-        # reader = ActiveModeReader(ser_dev=ser_dev, send_command_sleep=5)
+        ser_dev = Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
+        reader = SDS011ActiveReader(ser_dev=ser_dev, send_command_sleep=5)
 
-        ser_dev = Sds011SerialEmulator()
-        reader = SDS011ActiveReader(ser_dev=ser_dev, send_command_sleep=0)
+        # ser_dev = Sds011SerialEmulator()
+        # reader = SDS011ActiveReader(ser_dev=ser_dev, send_command_sleep=0)
         reader.set_working_period(0)
-        ser_dev.read(10)
+        reader.set_device_id(b"\xaa\xaa")
 
         yield reader
-        # Sleep the reader at the end so its not left on.
-        reader.base_reader.sleep()
+        try:
+            # Sleep the reader at the end so its not left on.
+            reader.sleep()
+        except IncompleteReadException:
+            # Can't re-sleep if were already asleep.
+            pass
         ser_dev.close()
 
     def test_query(self, reader: SDS011ActiveReader) -> None:
         result = reader.query()
-        assert 999 > result.pm25 > 0
-        assert 999 > result.pm10 > 0
+        assert pm25_in_range(result.pm25)
+        assert pm10_in_range(result.pm10)
 
     def test_query_sleep_mode(self, reader: SDS011ActiveReader) -> None:
         reader.sleep()
@@ -359,34 +374,32 @@ class TestActiveModeReader:
 
         # Make sure we can read again.
         result = reader.query()
-        assert 999 > result.pm25 > 0
-        assert 999 > result.pm10 > 0
+        assert pm25_in_range(result.pm25)
+        assert pm10_in_range(result.pm10)
 
     def test_set_working_period(self, reader: SDS011ActiveReader) -> None:
-        reader.set_working_period(20)
-
-        # We can't really do much here to validate that this is working.  Just ensure that we can still query after.
-        result = reader.query()
-        assert 999 > result.pm25 > 0
-        assert 999 > result.pm10 > 0
+        result = reader.set_working_period(20)
+        assert result.interval == 20
 
     def test_set_device_id(self, reader: SDS011ActiveReader) -> None:
-        reader.set_device_id(b"\x12\x23")
+        result = reader.set_device_id(b"\x12\x23")
 
-        # We can't really do much here to validate that this is working.  Just ensure that we can still query after.
-        result = reader.query()
         assert result.device_id == b"\x12\x23"
+
+        # Check that other response have the value as well.
+        result2 = reader.query()
+        assert result2.device_id == b"\x12\x23"
 
 
 class TestQueryModeReader:
     @pytest.fixture
     def reader(self) -> Generator[SDS011QueryReader, None, None]:
         # If you want to run these tests an integration you can replace the emulator here with a real serial device.
-        # ser_dev = serial.Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
-        # reader = QueryModeReader(ser_dev=ser_dev)
+        ser_dev = Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
+        reader = SDS011QueryReader(ser_dev=ser_dev)
 
-        ser_dev = Sds011SerialEmulator()
-        reader = SDS011QueryReader(ser_dev=ser_dev, send_command_sleep=0)
+        # ser_dev = Sds011SerialEmulator()
+        # reader = SDS011QueryReader(ser_dev=ser_dev, send_command_sleep=0)
         reader.set_working_period(0)
 
         yield reader
@@ -396,8 +409,8 @@ class TestQueryModeReader:
 
     def test_query(self, reader: SDS011QueryReader) -> None:
         result = reader.query()
-        assert 999 > result.pm25 > 0
-        assert 999 > result.pm10 > 0
+        assert pm25_in_range(result.pm25)
+        assert pm10_in_range(result.pm10)
 
     def test_query_sleep_mode(self, reader: SDS011QueryReader) -> None:
         reader.sleep()
@@ -413,8 +426,8 @@ class TestQueryModeReader:
         assert result.state == SleepState.WAKE
 
         result2 = reader.query()
-        assert 999 > result2.pm25 > 0
-        assert 999 > result2.pm10 > 0
+        assert pm25_in_range(result2.pm25)
+        assert pm10_in_range(result2.pm10)
 
     def test_get_sleep_state(self, reader: SDS011QueryReader) -> None:
         result = reader.sleep()
@@ -428,8 +441,8 @@ class TestQueryModeReader:
 
         # Make sure we can read again.
         result2 = reader.query()
-        assert 999 > result2.pm25 > 0
-        assert 999 > result2.pm10 > 0
+        assert pm25_in_range(result2.pm25)
+        assert pm10_in_range(result2.pm10)
 
     def test_get_reporting_mode(self, reader: SDS011QueryReader) -> None:
         result = reader.get_reporting_mode()
@@ -457,3 +470,30 @@ class TestQueryModeReader:
         assert 99 >= result.year >= 0
         assert 12 >= result.month >= 1
         assert 31 >= result.day >= 1
+
+
+class TestBuffer:
+    @pytest.mark.skip()
+    def test_query(self) -> None:
+        ser_dev = Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
+        reader = SDS011Reader(ser_dev=ser_dev)
+
+        reader.set_query_mode()
+        reader.wake()
+
+        # flush everything out of response
+        while len(ser_dev.read(10)) == 10:
+            pass
+
+        count_to = 250
+
+        # Send X commands to the device
+        for i in range(1, count_to):
+            device_id = i.to_bytes(length=2, byteorder="little")
+            reader.set_device_id(device_id)
+
+        # See whats in the buffer.
+        for i in range(1, count_to):
+            x = ser_dev.read(10)
+            device_id2 = int.from_bytes(x[6:8], byteorder="little")
+            assert device_id2 == i
