@@ -3,15 +3,15 @@ import pytest
 from sds011lib import SDS011Reader, SDS011ActiveReader, SDS011QueryReader
 from sds011lib._constants import ReportingMode, SleepState
 from sds011lib.exceptions import (
-    IncorrectCommandException,
     IncompleteReadException,
     ChecksumFailedException,
     IncorrectWrapperException,
 )
 from .serial_emulator import Sds011SerialEmulator
-from typing import Generator
+from typing import Generator, List
 from unittest.mock import Mock, patch
 from serial import Serial
+import os
 
 
 def pm25_in_range(pm25: float) -> bool:
@@ -22,9 +22,20 @@ def pm10_in_range(pm10: float) -> bool:
     return 999.9 >= pm10 >= 0.0
 
 
+def get_reader_fixtures() -> List[str]:
+    fixtures = ["emulated_reader"]
+    if os.getenv("INTEGRATION_TESTS") == "true":
+        fixtures.append("integrated_reader")
+    return fixtures
+
+
 class TestBaseReader:
     @pytest.fixture
-    def reader(self) -> Generator[SDS011Reader, None, None]:
+    def reader(self, request):
+        return request.getfixturevalue(request.param)
+
+    @pytest.fixture
+    def integrated_reader(self) -> Generator[SDS011Reader, None, None]:
         # If you want to run these tests an integration you can replace the emulator here with a real serial device.
         ser_dev = Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
         reader = SDS011Reader(ser_dev=ser_dev)
@@ -32,21 +43,23 @@ class TestBaseReader:
         # ser_dev = Sds011SerialEmulator()
         # reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
 
-        # flush out the reader in case theres leftovers in the buffer
-        ser_dev.read(10)
-
         reader.wake()
-        # We don't know if the device was in active or querying.  We must flush out the buffer from the above `wake`,
-        # if it exists.
-        ser_dev.read(10)
-
         reader.set_active_mode()
         reader.set_working_period(0)
+
+        # Clear everything so the reader acts as if the above commands weren't sent.
+        ser_dev.reset_input_buffer()
 
         yield reader
         # Sleep the reader at the end so its not left on.
         reader.sleep()
         ser_dev.close()
+
+    @pytest.fixture
+    def emulated_reader(self) -> SDS011Reader:
+        ser_dev = Sds011SerialEmulator()
+        reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
+        return reader
 
     @patch("serial.Serial")
     def test_string_constructor(self, serial_constructor: Mock) -> None:
@@ -54,6 +67,7 @@ class TestBaseReader:
         SDS011Reader("/dev/some_fake_dev")
         serial_constructor.assert_called_with("/dev/some_fake_dev", timeout=2)
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_hammer_reporting_mode(self, reader: SDS011Reader) -> None:
         # Switch the modes
         reader.set_query_mode()
@@ -69,6 +83,7 @@ class TestBaseReader:
         reader.request_reporting_mode()
         assert reader.query_reporting_mode().state == ReportingMode.QUERYING
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_hammer_sleep_query_mode(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         reader.sleep()
@@ -83,6 +98,7 @@ class TestBaseReader:
         result = reader.query_sleep_state()
         assert result.state == SleepState.WAKE
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_hammer_sleep_active_mode(self, reader: SDS011Reader) -> None:
         reader.set_active_mode()
         reader.sleep()
@@ -92,6 +108,7 @@ class TestBaseReader:
         result = reader.query_data()
         assert result.pm25 > 0.0
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_queries_in_sleep_mode_are_incomplete(self, reader: SDS011Reader) -> None:
         # Device can't be asked anything in sleep mode.
         reader.set_query_mode()
@@ -106,6 +123,7 @@ class TestBaseReader:
         with pytest.raises(IncompleteReadException):
             reader.query_working_period()
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_values_changed_sleep_mode_arent_persisted(
         self, reader: SDS011Reader
     ) -> None:
@@ -122,6 +140,7 @@ class TestBaseReader:
         reader.request_working_period()
         assert reader.query_working_period().interval == 0
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_buffer_is_first_command(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
 
@@ -135,23 +154,27 @@ class TestBaseReader:
         result = reader.query_sleep_state()
         assert result.state == SleepState.WAKE
 
-    def test_get_reporting_mode(self, reader: SDS011Reader) -> None:
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
+    def test_get_reporting_mode_query(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         reader.request_reporting_mode()
         result = reader.query_reporting_mode()
         assert result.state == ReportingMode.QUERYING
 
-    def test_get_reporting_mode_while_active_fails(self, reader: SDS011Reader) -> None:
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
+    def test_get_reporting_mode_active(self, reader: SDS011Reader) -> None:
         reader.set_active_mode()
-        with pytest.raises(IncorrectCommandException):
-            reader.query_reporting_mode()
+        result = reader.query_reporting_mode()
+        assert result.state == ReportingMode.ACTIVE
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_query_active_mode(self, reader: SDS011Reader) -> None:
         reader.set_active_mode()
         result = reader.query_data()
         assert pm25_in_range(result.pm25)
         assert pm10_in_range(result.pm10)
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_query_query_mode(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         reader.request_data()
@@ -171,6 +194,7 @@ class TestBaseReader:
         assert result.pm25 == 432.5
         assert result.pm10 == 531.1
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_set_device_id_query_mode(self, reader: SDS011Reader) -> None:
         new_device_id = b"\xbb\xaa"
         reader.set_query_mode()
@@ -183,6 +207,7 @@ class TestBaseReader:
         result2 = reader.query_data()
         assert result2.device_id == new_device_id
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_set_device_id_wrong_size(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         with pytest.raises(AttributeError):
@@ -191,47 +216,57 @@ class TestBaseReader:
         with pytest.raises(AttributeError):
             reader.set_device_id(b"\xbb")
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_sleep_query_mode(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         reader.sleep()
         result = reader.query_sleep_state()
         assert result.state == SleepState.SLEEP
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_sleep_active_mode(self, reader: SDS011Reader) -> None:
         reader.set_active_mode()
         reader.sleep()
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_wake_query_mode(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         reader.wake()
         result = reader.query_sleep_state()
         assert result.state == SleepState.WAKE
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_wake_active_mode(self, reader: SDS011Reader) -> None:
         reader.set_active_mode()
         reader.wake()
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_get_sleep_state_query_mode(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         reader.wake()
         result = reader.query_sleep_state()
         assert result.state == SleepState.WAKE
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_get_sleep_state_active_mode(self, reader: SDS011Reader) -> None:
         reader.set_active_mode()
-        with pytest.raises(IncorrectCommandException):
-            reader.query_sleep_state()
+        reader.wake()
+        result = reader.query_sleep_state()
+        assert result.state == SleepState.WAKE
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_set_working_period_query_mode(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         reader.set_working_period(10)
         result = reader.query_working_period()
         assert result.interval == 10
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_set_working_period_active_mode(self, reader: SDS011Reader) -> None:
         reader.set_active_mode()
         reader.set_working_period(10)
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_set_working_period_invalid_setting(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         with pytest.raises(AttributeError):
@@ -240,17 +275,21 @@ class TestBaseReader:
         with pytest.raises(AttributeError):
             reader.set_working_period(-1)
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_get_working_period_query_mode(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         reader.set_working_period(10)
         result = reader.query_working_period()
         assert result.interval == 10
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_get_working_period_active_mode(self, reader: SDS011Reader) -> None:
         reader.set_active_mode()
-        with pytest.raises(IncorrectCommandException):
-            reader.query_working_period()
+        reader.set_working_period(10)
+        result = reader.query_working_period()
+        assert result.interval == 10
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_get_firmware_version_query_mode(self, reader: SDS011Reader) -> None:
         reader.set_query_mode()
         reader.request_firmware_version()
@@ -259,10 +298,14 @@ class TestBaseReader:
         assert 12 >= result.month >= 1
         assert 31 >= result.day >= 1
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_get_firmware_version_active_mode(self, reader: SDS011Reader) -> None:
         reader.set_active_mode()
-        with pytest.raises(IncorrectCommandException):
-            reader.query_firmware_version()
+        reader.request_firmware_version()
+        result = reader.query_firmware_version()
+        assert 99 >= result.year >= 0
+        assert 12 >= result.month >= 1
+        assert 31 >= result.day >= 1
 
     def test_raises_if_not_serial_or_string(self) -> None:
         with pytest.raises(AttributeError):
@@ -339,7 +382,11 @@ class TestBaseReader:
 
 class TestActiveModeReader:
     @pytest.fixture
-    def reader(self) -> Generator[SDS011ActiveReader, None, None]:
+    def reader(self, request) -> Generator[SDS011ActiveReader, None, None]:
+        return request.getfixturevalue(request.param)
+
+    @pytest.fixture
+    def integrated_reader(self) -> Generator[SDS011ActiveReader, None, None]:
         # If you want to run these tests an integration you can replace the emulator here with a real serial device.
         ser_dev = Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
         reader = SDS011ActiveReader(ser_dev=ser_dev, send_command_sleep=5)
@@ -358,17 +405,26 @@ class TestActiveModeReader:
             pass
         ser_dev.close()
 
+    @pytest.fixture
+    def emulated_reader(self) -> SDS011ActiveReader:
+        ser_dev = Sds011SerialEmulator()
+        reader = SDS011ActiveReader(ser_dev=ser_dev, send_command_sleep=0)
+        return reader
+
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_query(self, reader: SDS011ActiveReader) -> None:
         result = reader.query()
         assert pm25_in_range(result.pm25)
         assert pm10_in_range(result.pm10)
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_query_sleep_mode(self, reader: SDS011ActiveReader) -> None:
         reader.sleep()
 
         with pytest.raises(IncompleteReadException):
             reader.query()
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_wake(self, reader: SDS011ActiveReader) -> None:
         reader.sleep()
         with pytest.raises(IncompleteReadException):
@@ -380,10 +436,12 @@ class TestActiveModeReader:
         assert pm25_in_range(result.pm25)
         assert pm10_in_range(result.pm10)
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_set_working_period(self, reader: SDS011ActiveReader) -> None:
         result = reader.set_working_period(20)
         assert result.interval == 20
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_set_device_id(self, reader: SDS011ActiveReader) -> None:
         result = reader.set_device_id(b"\x12\x23")
 
@@ -396,7 +454,11 @@ class TestActiveModeReader:
 
 class TestQueryModeReader:
     @pytest.fixture
-    def reader(self) -> Generator[SDS011QueryReader, None, None]:
+    def reader(self, request) -> Generator[SDS011QueryReader, None, None]:
+        return request.getfixturevalue(request.param)
+
+    @pytest.fixture
+    def integrated_reader(self) -> Generator[SDS011QueryReader, None, None]:
         # If you want to run these tests an integration you can replace the emulator here with a real serial device.
         ser_dev = Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
         reader = SDS011QueryReader(ser_dev=ser_dev)
@@ -410,17 +472,26 @@ class TestQueryModeReader:
         reader.base_reader.sleep()
         ser_dev.close()
 
+    @pytest.fixture
+    def emulated_reader(self) -> SDS011QueryReader:
+        ser_dev = Sds011SerialEmulator()
+        reader = SDS011QueryReader(ser_dev=ser_dev, send_command_sleep=0)
+        return reader
+
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_query(self, reader: SDS011QueryReader) -> None:
         result = reader.query()
         assert pm25_in_range(result.pm25)
         assert pm10_in_range(result.pm10)
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_query_sleep_mode(self, reader: SDS011QueryReader) -> None:
         reader.sleep()
 
         with pytest.raises(IncompleteReadException):
             reader.query()
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_wake(self, reader: SDS011QueryReader) -> None:
         reader.sleep()
         with pytest.raises(IncompleteReadException):
@@ -432,6 +503,7 @@ class TestQueryModeReader:
         assert pm25_in_range(result2.pm25)
         assert pm10_in_range(result2.pm10)
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_get_sleep_state(self, reader: SDS011QueryReader) -> None:
         result = reader.sleep()
         assert result.state == SleepState.SLEEP
@@ -447,19 +519,23 @@ class TestQueryModeReader:
         assert pm25_in_range(result2.pm25)
         assert pm10_in_range(result2.pm10)
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_get_reporting_mode(self, reader: SDS011QueryReader) -> None:
         result = reader.get_reporting_mode()
         assert result.state == ReportingMode.QUERYING
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_set_working_period(self, reader: SDS011QueryReader) -> None:
         result = reader.set_working_period(20)
         assert result.interval == 20
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_get_working_period(self, reader: SDS011QueryReader) -> None:
         reader.set_working_period(20)
         result = reader.get_working_period()
         assert result.interval == 20
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_set_device_id(self, reader: SDS011QueryReader) -> None:
         result = reader.set_device_id(b"\x12\x23")
         assert result.device_id == b"\x12\x23"
@@ -468,6 +544,7 @@ class TestQueryModeReader:
         result2 = reader.query()
         assert result2.device_id == b"\x12\x23"
 
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_get_firmware_version(self, reader: SDS011QueryReader) -> None:
         result = reader.get_firmware_version()
         assert 99 >= result.year >= 0

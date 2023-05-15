@@ -232,7 +232,12 @@ def _parse_firmware_response(data: bytes) -> CheckFirmwareResponse:
 class SDS011Reader:
     """NOVA PM SDS011 Reader."""
 
-    def __init__(self, ser_dev: Union[str, SerialLike], send_command_sleep: int = 1):
+    def __init__(
+        self,
+        ser_dev: Union[str, SerialLike],
+        send_command_sleep: int = 1,
+        max_loop_count: int = 30,
+    ):
         """Create a basic device.
 
         This is mostly a low level implementation. For practical purposes, most users will want to use the
@@ -242,6 +247,7 @@ class SDS011Reader:
         Args:
             ser_dev: A path to a serial device, or an instance of serial.Serial.
             send_command_sleep: The number of seconds to sleep after sending a command to the device.
+            max_loop_count: The maximum number of reads to search through to find a desired command.
         """
         if isinstance(ser_dev, str):
             self.ser: SerialLike = serial.Serial(ser_dev, timeout=2)
@@ -250,6 +256,7 @@ class SDS011Reader:
         else:
             raise AttributeError("ser_dev must be a string or Serial-like object.")
         self.send_command_sleep = send_command_sleep
+        self.max_loop_count = max_loop_count
 
     def request_data(self, device_id: bytes = ALL_SENSORS) -> None:
         """Submit a request to the device to return pollutant data."""
@@ -263,7 +270,12 @@ class SDS011Reader:
             Pollutant data from the device.
 
         """
-        return _parse_query_response(self._read_response())
+        return _parse_query_response(
+            self._read_until_response(
+                expected_command=Command.QUERY,
+                response_type=ResponseType.QUERY_RESPONSE,
+            )
+        )
 
     def request_reporting_mode(self, device_id: bytes = ALL_SENSORS) -> None:
         """Submit a request to the device to return the current reporting mode."""
@@ -283,29 +295,17 @@ class SDS011Reader:
             The current reporting mode of the device.
 
         """
-        return _parse_reporting_mode_response(self._read_response())
+        return _parse_reporting_mode_response(
+            self._read_until_response(expected_command=Command.SET_REPORTING_MODE)
+        )
 
     def set_active_mode(self) -> None:
         """Set the reporting mode to active."""
         self._set_reporting_mode(ReportingMode.ACTIVE)
-        try:
-            self.query_reporting_mode()
-        except IncorrectCommandException:
-            pass
-        except IncompleteReadException:
-            pass
 
     def set_query_mode(self) -> None:
         """Set the reporting mode to querying."""
         self._set_reporting_mode(ReportingMode.QUERYING)
-        try:
-            self.query_reporting_mode()
-        except IncorrectCommandException:
-            pass
-        except IncompleteReadException:
-            pass
-        except IncorrectCommandCodeException:
-            pass
 
     def _set_reporting_mode(
         self, reporting_mode: ReportingMode, device_id: bytes = ALL_SENSORS
@@ -349,7 +349,9 @@ class SDS011Reader:
         Returns:
             The current sleep state of the device.
         """
-        return _parse_sleep_wake_response(self._read_response())
+        return _parse_sleep_wake_response(
+            self._read_until_response(expected_command=Command.SET_SLEEP)
+        )
 
     def set_sleep_state(
         self, sleep_state: SleepState, device_id: bytes = ALL_SENSORS
@@ -386,7 +388,10 @@ class SDS011Reader:
         self.wake(device_id=device_id)
         # If we were in query mode, this would flush out the response.  If in active mode, this would be return read
         # data, but we don't care.
-        self.ser.read(10)
+        try:
+            self._read_until_response(expected_command=Command.SET_SLEEP)
+        except IncompleteReadException:
+            pass
 
     def set_device_id(
         self, device_id: bytes, target_device_id: bytes = ALL_SENSORS
@@ -414,7 +419,9 @@ class SDS011Reader:
             The current device ID.
 
         """
-        return _parse_device_id_response(self._read_response())
+        return _parse_device_id_response(
+            self._read_until_response(expected_command=Command.SET_DEVICE_ID)
+        )
 
     def request_working_period(self, device_id: bytes = ALL_SENSORS) -> None:
         """Submit a request to retrieve the current working period for the device."""
@@ -433,7 +440,9 @@ class SDS011Reader:
             The current working period set for the device.
 
         """
-        return _parse_working_period_reponse(self._read_response())
+        return _parse_working_period_reponse(
+            self._read_until_response(expected_command=Command.SET_WORKING_PERIOD)
+        )
 
     def set_working_period(
         self, working_period: int, device_id: bytes = ALL_SENSORS
@@ -472,7 +481,9 @@ class SDS011Reader:
             The firmware version from the device.
 
         """
-        return _parse_firmware_response(self._read_response())
+        return _parse_firmware_response(
+            self._read_until_response(expected_command=Command.CHECK_FIRMWARE_VERSION)
+        )
 
     def _send_command(self, cmd: bytes) -> None:
         """Send a command to the device as bytes.
@@ -524,6 +535,32 @@ class SDS011Reader:
             raise AttributeError("Invalid checksum length.")
         return sum(d for d in data) % 256
 
+    def _read_until_response(
+        self,
+        expected_command: Command,
+        response_type: ResponseType = ResponseType.GENERAL_RESPONSE,
+    ) -> bytes:
+        loop_count = 0
+        while output := self.ser.read(10):
+            try:
+                # Validate the response
+                _parse_read_response(
+                    data=output,
+                    command_code=expected_command,
+                    response_type=response_type,
+                )
+                return output
+            except (IncorrectCommandException, IncorrectCommandCodeException):
+                pass
+            if loop_count >= self.max_loop_count:
+                raise MissingResponseException(
+                    iteration_count=loop_count, expected_command=expected_command.value
+                )
+            loop_count += 1
+
+        # Loop exited since nothing was assigned to output, meaning no data left.
+        raise IncompleteReadException()
+
 
 class SDS011QueryReader:
     """Reader working in query mode."""
@@ -538,7 +575,7 @@ class SDS011QueryReader:
         self.base_reader = SDS011Reader(
             ser_dev=ser_dev, send_command_sleep=send_command_sleep
         )
-        self.base_reader.safe_wake(device_id=ALL_SENSORS)
+        self.base_reader.safe_wake()
         self.base_reader.set_query_mode()
 
     def query(self, device_id: bytes = ALL_SENSORS) -> QueryResponse:
@@ -726,9 +763,7 @@ class SDS011ActiveReader:
         """
         with self._connect():
             self.base_reader.sleep(device_id)
-            return _parse_sleep_wake_response(
-                self._read_until_response(expected_command=Command.SET_SLEEP)
-            )
+            return self.base_reader.query_sleep_state()
 
     def wake(self, device_id: bytes = ALL_SENSORS) -> SleepWakeReadResponse:
         """Wake the device up to start reading, turning on the fan and diode.
@@ -738,9 +773,7 @@ class SDS011ActiveReader:
         """
         with self._connect():
             self.base_reader.wake(device_id)
-            return _parse_sleep_wake_response(
-                self._read_until_response(expected_command=Command.SET_SLEEP)
-            )
+            return self.base_reader.query_sleep_state()
 
     def set_device_id(
         self, device_id: bytes, target_device_id: bytes = ALL_SENSORS
@@ -756,9 +789,7 @@ class SDS011ActiveReader:
         """
         with self._connect():
             self.base_reader.set_device_id(device_id, target_device_id)
-            return _parse_device_id_response(
-                self._read_until_response(expected_command=Command.SET_DEVICE_ID)
-            )
+            return self.base_reader.query_device_id()
 
     def set_working_period(
         self, working_period: int, device_id: bytes = ALL_SENSORS
@@ -779,32 +810,4 @@ class SDS011ActiveReader:
         """
         with self._connect():
             self.base_reader.set_working_period(working_period, device_id)
-            return _parse_working_period_reponse(
-                self._read_until_response(expected_command=Command.SET_WORKING_PERIOD)
-            )
-
-    def _read_until_response(
-        self,
-        expected_command: Command,
-        response_type: ResponseType = ResponseType.GENERAL_RESPONSE,
-    ) -> bytes:
-        loop_count = 0
-        while output := self.ser_dev.read(10):
-            try:
-                # Validate the response
-                _parse_read_response(
-                    data=output,
-                    command_code=expected_command,
-                    response_type=response_type,
-                )
-                return output
-            except (IncorrectCommandException, IncorrectCommandCodeException):
-                pass
-            if loop_count > self.max_loop_count:
-                raise MissingResponseException(
-                    iteration_count=loop_count, expected_command=expected_command.value
-                )
-            loop_count += 1
-
-        # Loop exited since nothing was assigned to output, meaning no data left.
-        raise IncompleteReadException()
+            return self.base_reader.query_working_period()
