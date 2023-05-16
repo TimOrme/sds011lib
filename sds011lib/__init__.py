@@ -247,7 +247,7 @@ class SDS011Reader:
         Args:
             ser_dev: A path to a serial device, or an instance of serial.Serial.
             send_command_sleep: The number of seconds to sleep after sending a command to the device.
-            max_loop_count: The maximum number of reads to search through to find a desired command.
+            max_loop_count: The maximum number of reads to search through to find a desired response command.
         """
         if isinstance(ser_dev, str):
             self.ser: SerialLike = serial.Serial(ser_dev, timeout=2)
@@ -540,6 +540,23 @@ class SDS011Reader:
         expected_command: Command,
         response_type: ResponseType = ResponseType.GENERAL_RESPONSE,
     ) -> bytes:
+        """Read from the serial buffer until we find the expected command.
+
+        This effectively allows us to send commands in active mode; even if the device has filled the buffer with read
+        data, we can still find our responses.
+
+        Args:
+            expected_command: The expected command were looking for
+            response_type: The expected response type were looking for
+
+        Returns:
+            bytes of the matched command
+
+        Raises:
+            MissingResponseException: If the command couldn't be found in `self.max_loop_count` iterations.
+            IncompleteReadException: If the buffer was empty.
+
+        """
         loop_count = 0
         while output := self.ser.read(10):
             try:
@@ -552,6 +569,7 @@ class SDS011Reader:
                 return output
             except (IncorrectCommandException, IncorrectCommandCodeException):
                 pass
+            # Make sure we dont loop forever.
             if loop_count >= self.max_loop_count:
                 raise MissingResponseException(
                     iteration_count=loop_count, expected_command=expected_command.value
@@ -716,7 +734,8 @@ class SDS011QueryReader:
 class SDS011ActiveReader:
     """Active Mode Reader.
 
-    Use with caution! Active mode is unpredictable.  Query mode is much preferred.
+    Note that because active mode readers will constantly return data, this implementation opens and closes the serial
+    port for each command.
     """
 
     def __init__(self, ser_dev: Union[str, SerialLike], send_command_sleep: int = 2):
@@ -739,6 +758,11 @@ class SDS011ActiveReader:
 
     @contextmanager
     def _connect(self) -> Generator[None, None, None]:
+        """Connection manager for active mode.
+
+        Opens the serial connection to execute the command, and then closes it afterwards.  In active mode, we don't
+        want to leave the connection open as it will fill up the buffer with read data.
+        """
         self.ser_dev.open()
         try:
             yield

@@ -1,3 +1,15 @@
+"""Tests for SDS011 readers.
+
+Note that tests can run against both an emulated software reader, and a hardware device.  The emulator runs
+significantly faster, but obviously isn't 100% guaranteed to behave exactly like a real device.
+
+If you have a device attached, and want to run tests against it, you can set an environment variable with your test run,
+like:
+
+TEST_DEVICE=/dev/ttyUSB0 pytest tests/
+
+If `TEST_DEVICE` isn't set, tests will only run against the emulator.
+"""
 import pytest
 
 from sds011lib import SDS011Reader, SDS011ActiveReader, SDS011QueryReader
@@ -24,7 +36,7 @@ def pm10_in_range(pm10: float) -> bool:
 
 def get_reader_fixtures() -> List[str]:
     fixtures = ["emulated_reader"]
-    if os.getenv("INTEGRATION_TESTS") == "true":
+    if os.getenv("TEST_DEVICE", None):
         fixtures.append("integrated_reader")
     return fixtures
 
@@ -37,7 +49,7 @@ class TestBaseReader:
     @pytest.fixture
     def integrated_reader(self) -> Generator[SDS011Reader, None, None]:
         # If you want to run these tests an integration you can replace the emulator here with a real serial device.
-        ser_dev = Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
+        ser_dev = Serial(os.getenv("TEST_DEVICE"), timeout=2, baudrate=9600)
         reader = SDS011Reader(ser_dev=ser_dev)
 
         # ser_dev = Sds011SerialEmulator()
@@ -388,7 +400,7 @@ class TestActiveModeReader:
     @pytest.fixture
     def integrated_reader(self) -> Generator[SDS011ActiveReader, None, None]:
         # If you want to run these tests an integration you can replace the emulator here with a real serial device.
-        ser_dev = Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
+        ser_dev = Serial(os.getenv("TEST_DEVICE"), timeout=2, baudrate=9600)
         reader = SDS011ActiveReader(ser_dev=ser_dev, send_command_sleep=5)
 
         # ser_dev = Sds011SerialEmulator()
@@ -460,7 +472,7 @@ class TestQueryModeReader:
     @pytest.fixture
     def integrated_reader(self) -> Generator[SDS011QueryReader, None, None]:
         # If you want to run these tests an integration you can replace the emulator here with a real serial device.
-        ser_dev = Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
+        ser_dev = Serial(os.getenv("TEST_DEVICE"), timeout=2, baudrate=9600)
         reader = SDS011QueryReader(ser_dev=ser_dev)
 
         # ser_dev = Sds011SerialEmulator()
