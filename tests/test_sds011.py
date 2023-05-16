@@ -43,7 +43,7 @@ def get_reader_fixtures() -> List[str]:
 
 class TestBaseReader:
     @pytest.fixture
-    def reader(self, request):
+    def reader(self, request):  # type: ignore
         return request.getfixturevalue(request.param)
 
     @pytest.fixture
@@ -394,7 +394,7 @@ class TestBaseReader:
 
 class TestActiveModeReader:
     @pytest.fixture
-    def reader(self, request) -> Generator[SDS011ActiveReader, None, None]:
+    def reader(self, request):  # type: ignore
         return request.getfixturevalue(request.param)
 
     @pytest.fixture
@@ -466,7 +466,7 @@ class TestActiveModeReader:
 
 class TestQueryModeReader:
     @pytest.fixture
-    def reader(self, request) -> Generator[SDS011QueryReader, None, None]:
+    def reader(self, request):  # type: ignore
         return request.getfixturevalue(request.param)
 
     @pytest.fixture

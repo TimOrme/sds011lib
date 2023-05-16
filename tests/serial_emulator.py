@@ -142,7 +142,11 @@ class Sds011SerialEmulator:
             self._inject_active_mode_reads()
         self.response_buffer += data
 
-    def _inject_active_mode_reads(self):
+    def _inject_active_mode_reads(self) -> None:
+        """Inject reads when were in active mode.
+
+        Always injects at least one read, but tries to inject more if there hasn't been a command in a while.
+        """
         now = datetime.now()
         seconds_since_last_command = (now - self.last_command_time).seconds
         for x in range(0, max(seconds_since_last_command, 1)):
