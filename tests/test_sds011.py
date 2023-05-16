@@ -321,7 +321,7 @@ class TestBaseReader:
         assert 31 >= result.day >= 1
 
     @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
-    def test_throws_if_max_loop_count(self, reader: SDS011Reader) -> None:
+    def test_throws_if_missing_response(self, reader: SDS011Reader) -> None:
         # Set query mode just to make it easier.
         reader.set_query_mode()
         reader.request_reporting_mode()
