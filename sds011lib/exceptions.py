@@ -80,3 +80,18 @@ class InvalidDeviceIdException(Sds011Exception):
     """
 
     pass
+
+
+class MissingResponseException(Sds011Exception):
+    """Thrown if we are trying to find a response from the device, but it doesn't return in the max iterations.
+
+    This can occur if the device just never responds to a command thats sent.
+    """
+
+    def __init__(self, iteration_count: int, expected_command: bytes):
+        """Create exception."""
+        super().__init__(
+            f"Tried to find command response {expected_command!r} in {iteration_count} attempts, but never did."
+        )
+        self.iteration_count: int = iteration_count
+        self.expected_command: bytes = expected_command
