@@ -18,6 +18,7 @@ from sds011lib.exceptions import (
     IncompleteReadException,
     ChecksumFailedException,
     IncorrectWrapperException,
+    MissingResponseException,
 )
 from .serial_emulator import Sds011SerialEmulator
 from typing import Generator, List
@@ -318,6 +319,28 @@ class TestBaseReader:
         assert 99 >= result.year >= 0
         assert 12 >= result.month >= 1
         assert 31 >= result.day >= 1
+
+    @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
+    def test_throws_if_max_loop_count(self, reader: SDS011Reader) -> None:
+        # Set query mode just to make it easier.
+        reader.set_query_mode()
+        reader.request_reporting_mode()
+        # flush the device just in case stuff from active mode is leftover
+        reader.ser.close()
+        reader.ser.open()
+        # Set the max loop to three
+        reader.max_loop_count = 3
+
+        # Send 3 commands to set device ID, filling up the response buffer.
+        for i in range(0, 4):
+            reader.set_device_id(b"\xaa\xbb")
+
+        # Send a data command
+        reader.request_data()
+
+        # Command should be 4 back.
+        with pytest.raises(MissingResponseException):
+            reader.query_data()
 
     def test_raises_if_not_serial_or_string(self) -> None:
         with pytest.raises(AttributeError):
