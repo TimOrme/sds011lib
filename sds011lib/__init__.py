@@ -504,23 +504,6 @@ class SDS011Reader:
         self.ser.write(full_command)
         time.sleep(self.send_command_sleep)
 
-    def _read_response(self) -> bytes:
-        """Read a response from the device.
-
-        Responses from the device should always be 10 bytes in length.
-
-        Returns:
-            Bytes from the device.
-
-        Raises:
-            IncompleteReadException: If the number of bytes read is not 10.
-
-        """
-        result = self.ser.read(10)
-        if len(result) != 10:
-            raise IncompleteReadException(len(result))
-        return result
-
     def _cmd_checksum(self, data: bytes) -> int:
         """Generate a checksum for the data bytes of a command.
 
