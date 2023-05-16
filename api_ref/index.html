@@ -1,0 +1,4069 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../understanding/">
+      
+      
+        <link rel="next" href="../contributing/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.8">
+    
+    
+      
+        <title>API Reference - SDS011lib</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ded33207.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="SDS011lib" class="md-header__button md-logo" aria-label="SDS011lib" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SDS011lib
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/TimOrme/sds011lib" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SDS011lib" class="md-nav__button md-logo" aria-label="SDS011lib" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    SDS011lib
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/TimOrme/sds011lib" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../understanding/" class="md-nav__link">
+        Understanding the SDS011
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          API Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        API Reference
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#readers" class="md-nav__link">
+    Readers
+  </a>
+  
+    <nav class="md-nav" aria-label="Readers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib" class="md-nav__link">
+    sds011lib
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011ActiveReader" class="md-nav__link">
+    SDS011ActiveReader
+  </a>
+  
+    <nav class="md-nav" aria-label="SDS011ActiveReader">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011ActiveReader.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011ActiveReader.query" class="md-nav__link">
+    query()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011ActiveReader.set_device_id" class="md-nav__link">
+    set_device_id()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011ActiveReader.set_working_period" class="md-nav__link">
+    set_working_period()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011ActiveReader.sleep" class="md-nav__link">
+    sleep()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011ActiveReader.wake" class="md-nav__link">
+    wake()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader" class="md-nav__link">
+    SDS011QueryReader
+  </a>
+  
+    <nav class="md-nav" aria-label="SDS011QueryReader">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.get_firmware_version" class="md-nav__link">
+    get_firmware_version()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.get_reporting_mode" class="md-nav__link">
+    get_reporting_mode()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.get_sleep_state" class="md-nav__link">
+    get_sleep_state()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.get_working_period" class="md-nav__link">
+    get_working_period()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.query" class="md-nav__link">
+    query()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.set_device_id" class="md-nav__link">
+    set_device_id()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.set_working_period" class="md-nav__link">
+    set_working_period()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.sleep" class="md-nav__link">
+    sleep()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.wake" class="md-nav__link">
+    wake()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader" class="md-nav__link">
+    SDS011Reader
+  </a>
+  
+    <nav class="md-nav" aria-label="SDS011Reader">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.query_data" class="md-nav__link">
+    query_data()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.query_device_id" class="md-nav__link">
+    query_device_id()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.query_firmware_version" class="md-nav__link">
+    query_firmware_version()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.query_reporting_mode" class="md-nav__link">
+    query_reporting_mode()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.query_sleep_state" class="md-nav__link">
+    query_sleep_state()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.query_working_period" class="md-nav__link">
+    query_working_period()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.request_data" class="md-nav__link">
+    request_data()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.request_firmware_version" class="md-nav__link">
+    request_firmware_version()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.request_reporting_mode" class="md-nav__link">
+    request_reporting_mode()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.request_sleep_state" class="md-nav__link">
+    request_sleep_state()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.request_working_period" class="md-nav__link">
+    request_working_period()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.safe_wake" class="md-nav__link">
+    safe_wake()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.set_active_mode" class="md-nav__link">
+    set_active_mode()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.set_device_id" class="md-nav__link">
+    set_device_id()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.set_query_mode" class="md-nav__link">
+    set_query_mode()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.set_sleep_state" class="md-nav__link">
+    set_sleep_state()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.set_working_period" class="md-nav__link">
+    set_working_period()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.sleep" class="md-nav__link">
+    sleep()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.wake" class="md-nav__link">
+    wake()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SerialLike" class="md-nav__link">
+    SerialLike
+  </a>
+  
+    <nav class="md-nav" aria-label="SerialLike">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SerialLike.close" class="md-nav__link">
+    close()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SerialLike.open" class="md-nav__link">
+    open()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SerialLike.read" class="md-nav__link">
+    read()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SerialLike.write" class="md-nav__link">
+    write()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#responses" class="md-nav__link">
+    Responses
+  </a>
+  
+    <nav class="md-nav" aria-label="Responses">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.responses" class="md-nav__link">
+    responses
+  </a>
+  
+    <nav class="md-nav" aria-label="responses">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.responses.CheckFirmwareResponse" class="md-nav__link">
+    CheckFirmwareResponse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.responses.DeviceIdResponse" class="md-nav__link">
+    DeviceIdResponse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.responses.QueryResponse" class="md-nav__link">
+    QueryResponse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.responses.ReportingModeResponse" class="md-nav__link">
+    ReportingModeResponse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.responses.SleepWakeReadResponse" class="md-nav__link">
+    SleepWakeReadResponse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.responses.WorkingPeriodReadResponse" class="md-nav__link">
+    WorkingPeriodReadResponse
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exceptions" class="md-nav__link">
+    Exceptions
+  </a>
+  
+    <nav class="md-nav" aria-label="Exceptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions" class="md-nav__link">
+    exceptions
+  </a>
+  
+    <nav class="md-nav" aria-label="exceptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.ChecksumFailedException" class="md-nav__link">
+    ChecksumFailedException
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.IncompleteReadException" class="md-nav__link">
+    IncompleteReadException
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.IncorrectCommandCodeException" class="md-nav__link">
+    IncorrectCommandCodeException
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.IncorrectCommandException" class="md-nav__link">
+    IncorrectCommandException
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.IncorrectWrapperException" class="md-nav__link">
+    IncorrectWrapperException
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.InvalidDeviceIdException" class="md-nav__link">
+    InvalidDeviceIdException
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.MissingResponseException" class="md-nav__link">
+    MissingResponseException
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.Sds011Exception" class="md-nav__link">
+    Sds011Exception
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        Contributing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resource/" class="md-nav__link">
+        Resources
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#readers" class="md-nav__link">
+    Readers
+  </a>
+  
+    <nav class="md-nav" aria-label="Readers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib" class="md-nav__link">
+    sds011lib
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011ActiveReader" class="md-nav__link">
+    SDS011ActiveReader
+  </a>
+  
+    <nav class="md-nav" aria-label="SDS011ActiveReader">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011ActiveReader.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011ActiveReader.query" class="md-nav__link">
+    query()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011ActiveReader.set_device_id" class="md-nav__link">
+    set_device_id()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011ActiveReader.set_working_period" class="md-nav__link">
+    set_working_period()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011ActiveReader.sleep" class="md-nav__link">
+    sleep()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011ActiveReader.wake" class="md-nav__link">
+    wake()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader" class="md-nav__link">
+    SDS011QueryReader
+  </a>
+  
+    <nav class="md-nav" aria-label="SDS011QueryReader">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.get_firmware_version" class="md-nav__link">
+    get_firmware_version()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.get_reporting_mode" class="md-nav__link">
+    get_reporting_mode()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.get_sleep_state" class="md-nav__link">
+    get_sleep_state()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.get_working_period" class="md-nav__link">
+    get_working_period()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.query" class="md-nav__link">
+    query()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.set_device_id" class="md-nav__link">
+    set_device_id()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.set_working_period" class="md-nav__link">
+    set_working_period()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.sleep" class="md-nav__link">
+    sleep()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011QueryReader.wake" class="md-nav__link">
+    wake()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader" class="md-nav__link">
+    SDS011Reader
+  </a>
+  
+    <nav class="md-nav" aria-label="SDS011Reader">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.query_data" class="md-nav__link">
+    query_data()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.query_device_id" class="md-nav__link">
+    query_device_id()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.query_firmware_version" class="md-nav__link">
+    query_firmware_version()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.query_reporting_mode" class="md-nav__link">
+    query_reporting_mode()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.query_sleep_state" class="md-nav__link">
+    query_sleep_state()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.query_working_period" class="md-nav__link">
+    query_working_period()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.request_data" class="md-nav__link">
+    request_data()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.request_firmware_version" class="md-nav__link">
+    request_firmware_version()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.request_reporting_mode" class="md-nav__link">
+    request_reporting_mode()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.request_sleep_state" class="md-nav__link">
+    request_sleep_state()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.request_working_period" class="md-nav__link">
+    request_working_period()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.safe_wake" class="md-nav__link">
+    safe_wake()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.set_active_mode" class="md-nav__link">
+    set_active_mode()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.set_device_id" class="md-nav__link">
+    set_device_id()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.set_query_mode" class="md-nav__link">
+    set_query_mode()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.set_sleep_state" class="md-nav__link">
+    set_sleep_state()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.set_working_period" class="md-nav__link">
+    set_working_period()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.sleep" class="md-nav__link">
+    sleep()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SDS011Reader.wake" class="md-nav__link">
+    wake()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SerialLike" class="md-nav__link">
+    SerialLike
+  </a>
+  
+    <nav class="md-nav" aria-label="SerialLike">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SerialLike.close" class="md-nav__link">
+    close()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SerialLike.open" class="md-nav__link">
+    open()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SerialLike.read" class="md-nav__link">
+    read()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.SerialLike.write" class="md-nav__link">
+    write()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#responses" class="md-nav__link">
+    Responses
+  </a>
+  
+    <nav class="md-nav" aria-label="Responses">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.responses" class="md-nav__link">
+    responses
+  </a>
+  
+    <nav class="md-nav" aria-label="responses">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.responses.CheckFirmwareResponse" class="md-nav__link">
+    CheckFirmwareResponse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.responses.DeviceIdResponse" class="md-nav__link">
+    DeviceIdResponse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.responses.QueryResponse" class="md-nav__link">
+    QueryResponse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.responses.ReportingModeResponse" class="md-nav__link">
+    ReportingModeResponse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.responses.SleepWakeReadResponse" class="md-nav__link">
+    SleepWakeReadResponse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.responses.WorkingPeriodReadResponse" class="md-nav__link">
+    WorkingPeriodReadResponse
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exceptions" class="md-nav__link">
+    Exceptions
+  </a>
+  
+    <nav class="md-nav" aria-label="Exceptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions" class="md-nav__link">
+    exceptions
+  </a>
+  
+    <nav class="md-nav" aria-label="exceptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.ChecksumFailedException" class="md-nav__link">
+    ChecksumFailedException
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.IncompleteReadException" class="md-nav__link">
+    IncompleteReadException
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.IncorrectCommandCodeException" class="md-nav__link">
+    IncorrectCommandCodeException
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.IncorrectCommandException" class="md-nav__link">
+    IncorrectCommandException
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.IncorrectWrapperException" class="md-nav__link">
+    IncorrectWrapperException
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.InvalidDeviceIdException" class="md-nav__link">
+    InvalidDeviceIdException
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.MissingResponseException" class="md-nav__link">
+    MissingResponseException
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sds011lib.exceptions.Sds011Exception" class="md-nav__link">
+    Sds011Exception
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="api-reference">API Reference</h1>
+<h2 id="readers">Readers</h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+<a id="sds011lib"></a>
+  <div class="doc doc-contents first">
+  
+      <p>SDS011 Reader module.</p>
+<p>Contains multiple implementations of readers, for different use cases.</p>
+<ul>
+<li>SDS011QueryReader - (Recommended) A reader which operates exclusively in query mode.</li>
+<li>SDS011ActiveReader - A reader which operates exclusively in active mode</li>
+<li>SS011Reader - A lower-level reader, which isn't opinionated about the mode.</li>
+</ul>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>ALL_SENSORS</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>A special device ID which targets all sensors attached to a serial port.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="sds011lib.SDS011ActiveReader" class="doc doc-heading">
+        <code>SDS011ActiveReader</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Active Mode Reader.</p>
+<p>Note that because active mode readers will constantly return data, this implementation opens and closes the serial
+port for each command.</p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011ActiveReader.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">ser_dev</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SerialLike</span><span class="p">],</span> <span class="n">send_command_sleep</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Create a reader which operates exclusively in active mode.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>ser_dev</code></td>
+          <td>
+                <code><span title="typing.Union">Union</span>[str, <a class="autorefs autorefs-internal" title="sds011lib.SerialLike" href="#sds011lib.SerialLike">SerialLike</a>]</code>
+          </td>
+          <td><p>A path to a serial device, or an instance of serial.Serial.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>send_command_sleep</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The number of seconds to sleep after sending a command to the device.</p></td>
+          <td>
+                <code>2</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011ActiveReader.query" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">query</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">QueryResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Query the device for pollutant data.</p>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.QueryResponse" href="#sds011lib.responses.QueryResponse">QueryResponse</a></code>
+          </td>
+          <td><p>The latest pollutant data.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011ActiveReader.set_device_id" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_device_id</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">target_device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DeviceIdResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Set the device ID.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The new, 4-byte device ID to set.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>target_device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The target device ID.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.DeviceIdResponse" href="#sds011lib.responses.DeviceIdResponse">DeviceIdResponse</a></code>
+          </td>
+          <td><p>A response with the new device ID.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011ActiveReader.set_working_period" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_working_period</span><span class="p">(</span><span class="n">working_period</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkingPeriodReadResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Set the working period for the device.</p>
+<p>Working period must be between 0 and 30.</p>
+<p>0 means the device will read continuously.
+Any value 1-30 means the device will wake and read for 30 seconds every n*60-30 seconds.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>working_period</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>A value 0-30 to set as the new working period</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The device ID to set the working period for.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.WorkingPeriodReadResponse" href="#sds011lib.responses.WorkingPeriodReadResponse">WorkingPeriodReadResponse</a></code>
+          </td>
+          <td><p>A response with the new working period</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011ActiveReader.sleep" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">sleep</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SleepWakeReadResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Put the device to sleep, turning off fan and diode.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The device ID to put to sleep.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011ActiveReader.wake" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">wake</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SleepWakeReadResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Wake the device up to start reading, turning on the fan and diode.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The device ID to wake up.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="sds011lib.SDS011QueryReader" class="doc doc-heading">
+        <code>SDS011QueryReader</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Reader working in query mode.</p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011QueryReader.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">ser_dev</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SerialLike</span><span class="p">],</span> <span class="n">send_command_sleep</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Create a reader which operates exclusively in query mode.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>ser_dev</code></td>
+          <td>
+                <code><span title="typing.Union">Union</span>[str, <a class="autorefs autorefs-internal" title="sds011lib.SerialLike" href="#sds011lib.SerialLike">SerialLike</a>]</code>
+          </td>
+          <td><p>A path to a serial device, or an instance of serial.Serial.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>send_command_sleep</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The number of seconds to sleep after sending a command to the device.</p></td>
+          <td>
+                <code>1</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011QueryReader.get_firmware_version" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_firmware_version</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CheckFirmwareResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Retrieve the firmware version from the device.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The device ID to retrieve firmware version for.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.CheckFirmwareResponse" href="#sds011lib.responses.CheckFirmwareResponse">CheckFirmwareResponse</a></code>
+          </td>
+          <td><p>The firmware version of the device</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011QueryReader.get_reporting_mode" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_reporting_mode</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReportingModeResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the current reporting mode of the device.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The device ID to get the reporting mode for.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.ReportingModeResponse" href="#sds011lib.responses.ReportingModeResponse">ReportingModeResponse</a></code>
+          </td>
+          <td><p>The current reporting mode of the device.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011QueryReader.get_sleep_state" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_sleep_state</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SleepWakeReadResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the current sleep state.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The device ID to get the sleep state for.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.SleepWakeReadResponse" href="#sds011lib.responses.SleepWakeReadResponse">SleepWakeReadResponse</a></code>
+          </td>
+          <td><p>The current sleep state of the device.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011QueryReader.get_working_period" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_working_period</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkingPeriodReadResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Retrieve the current working period for the device.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The device ID to get the working period for.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.WorkingPeriodReadResponse" href="#sds011lib.responses.WorkingPeriodReadResponse">WorkingPeriodReadResponse</a></code>
+          </td>
+          <td><p>A response with the current working period.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011QueryReader.query" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">query</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QueryResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Query the device for pollutant data.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The device ID to get pollutant data for.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.QueryResponse" href="#sds011lib.responses.QueryResponse">QueryResponse</a></code>
+          </td>
+          <td><p>The latest pollutant data.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011QueryReader.set_device_id" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_device_id</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">target_device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DeviceIdResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Set the device ID.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The new, 4-byte device ID to set.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>target_device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The target device ID.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.DeviceIdResponse" href="#sds011lib.responses.DeviceIdResponse">DeviceIdResponse</a></code>
+          </td>
+          <td><p>A response with the new device ID.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011QueryReader.set_working_period" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_working_period</span><span class="p">(</span><span class="n">working_period</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkingPeriodReadResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Set the working period for the device.</p>
+<p>Working period must be between 0 and 30.</p>
+<p>0 means the device will read continuously.
+Any value 1-30 means the device will wake and read for 30 seconds every n*60-30 seconds.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>working_period</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>A value 0-30 to set as the new working period</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The device ID to set the working period for.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.WorkingPeriodReadResponse" href="#sds011lib.responses.WorkingPeriodReadResponse">WorkingPeriodReadResponse</a></code>
+          </td>
+          <td><p>A response with the new working period</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011QueryReader.sleep" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">sleep</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SleepWakeReadResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Put the device to sleep, turning off fan and diode.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The device ID to put to sleep.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.SleepWakeReadResponse" href="#sds011lib.responses.SleepWakeReadResponse">SleepWakeReadResponse</a></code>
+          </td>
+          <td><p>The new sleep state of the device.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011QueryReader.wake" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">wake</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SleepWakeReadResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Wake the device up to start reading, turning on the fan and diode.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The device ID to wake up.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.SleepWakeReadResponse" href="#sds011lib.responses.SleepWakeReadResponse">SleepWakeReadResponse</a></code>
+          </td>
+          <td><p>The new sleep state of the device.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="sds011lib.SDS011Reader" class="doc doc-heading">
+        <code>SDS011Reader</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>NOVA PM SDS011 Reader.</p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">ser_dev</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SerialLike</span><span class="p">],</span> <span class="n">send_command_sleep</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_loop_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Create a basic device.</p>
+<p>This is mostly a low level implementation. For practical purposes, most users will want to use the
+SDS011QueryReader or SDS011ActiveReader.  This implementation would only be useful for very special cases, and
+serves as the base class for the other reader implementations anyways.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>ser_dev</code></td>
+          <td>
+                <code><span title="typing.Union">Union</span>[str, <a class="autorefs autorefs-internal" title="sds011lib.SerialLike" href="#sds011lib.SerialLike">SerialLike</a>]</code>
+          </td>
+          <td><p>A path to a serial device, or an instance of serial.Serial.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>send_command_sleep</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The number of seconds to sleep after sending a command to the device.</p></td>
+          <td>
+                <code>1</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>max_loop_count</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The maximum number of reads to search through to find a desired response command.</p></td>
+          <td>
+                <code>30</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.query_data" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">query_data</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">QueryResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Query the device for pollutant data.</p>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.QueryResponse" href="#sds011lib.responses.QueryResponse">QueryResponse</a></code>
+          </td>
+          <td><p>Pollutant data from the device.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.query_device_id" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">query_device_id</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">DeviceIdResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Retrieve the current device ID.</p>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.DeviceIdResponse" href="#sds011lib.responses.DeviceIdResponse">DeviceIdResponse</a></code>
+          </td>
+          <td><p>The current device ID.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.query_firmware_version" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">query_firmware_version</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CheckFirmwareResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Retrieve the firmware version from the device.</p>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.CheckFirmwareResponse" href="#sds011lib.responses.CheckFirmwareResponse">CheckFirmwareResponse</a></code>
+          </td>
+          <td><p>The firmware version from the device.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.query_reporting_mode" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">query_reporting_mode</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ReportingModeResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the current reporting mode of the device.</p>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.ReportingModeResponse" href="#sds011lib.responses.ReportingModeResponse">ReportingModeResponse</a></code>
+          </td>
+          <td><p>The current reporting mode of the device.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.query_sleep_state" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">query_sleep_state</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SleepWakeReadResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the current sleep state.</p>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.SleepWakeReadResponse" href="#sds011lib.responses.SleepWakeReadResponse">SleepWakeReadResponse</a></code>
+          </td>
+          <td><p>The current sleep state of the device.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.query_working_period" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">query_working_period</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">WorkingPeriodReadResponse</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Retrieve the current working period for the device.</p>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="sds011lib.responses.WorkingPeriodReadResponse" href="#sds011lib.responses.WorkingPeriodReadResponse">WorkingPeriodReadResponse</a></code>
+          </td>
+          <td><p>The current working period set for the device.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.request_data" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">request_data</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Submit a request to the device to return pollutant data.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.request_firmware_version" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">request_firmware_version</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Submit a request to retrieve the firmware version from the device.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.request_reporting_mode" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">request_reporting_mode</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Submit a request to the device to return the current reporting mode.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.request_sleep_state" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">request_sleep_state</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Submit a request to get the current sleep state.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.request_working_period" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">request_working_period</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Submit a request to retrieve the current working period for the device.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.safe_wake" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">safe_wake</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Wake the device up, if you don't know what mode its in.</p>
+<p>This operates as a fire-and-forget, even in query mode.  You shouldn't have to (and can't) query for a response
+after this command.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.set_active_mode" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_active_mode</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Set the reporting mode to active.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.set_device_id" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_device_id</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">target_device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Set the device ID.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The new device ID to set.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>target_device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The target device ID to set the new device ID on.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.set_query_mode" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_query_mode</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Set the reporting mode to querying.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.set_sleep_state" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_sleep_state</span><span class="p">(</span><span class="n">sleep_state</span><span class="p">:</span> <span class="n">SleepState</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Set the sleep state, either wake or sleep.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>sleep_state</code></td>
+          <td>
+                <code><span title="sds011lib._constants.SleepState">SleepState</span></code>
+          </td>
+          <td><p>The sleep state to set, either SleepState.WAKE or SleepState.SLEEP</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The device ID to sleep or wake.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.set_working_period" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_working_period</span><span class="p">(</span><span class="n">working_period</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Set the working period for the device.</p>
+<p>Working period must be between 0 and 30.</p>
+<p>0 means the device will read continuously.
+Any value 1-30 means the device will wake and read for 30 seconds every n*60-30 seconds.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>working_period</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>A value 0-30 to set as the new working period</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The device ID to set the working period for.</p></td>
+          <td>
+                <code>ALL_SENSORS</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.sleep" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">sleep</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Put the device to sleep, turning off fan and diode.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SDS011Reader.wake" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">wake</span><span class="p">(</span><span class="n">device_id</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">ALL_SENSORS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Wake the device up to start reading, turning on fan and diode.</p>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="sds011lib.SerialLike" class="doc doc-heading">
+        <code>SerialLike</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
+
+  
+      <p>A serial-like device.</p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SerialLike.close" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">close</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Close a connection to the device.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SerialLike.open" class="doc doc-heading">
+<code class="highlight language-python"><span class="nb">open</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Open a connection to the device.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SerialLike.read" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">read</span><span class="p">(</span><span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Read data from the device.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sds011lib.SerialLike.write" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Write data from the device.</p>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div><h2 id="responses">Responses</h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="sds011lib.responses" class="doc doc-heading">
+          <code>sds011lib.responses</code>
+
+
+</h3>
+
+  <div class="doc doc-contents first">
+  
+      <p>Response objects for SDS011.</p>
+<p>Creates and validates typed classes from binary responses from the device.</p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="sds011lib.responses.CheckFirmwareResponse" class="doc doc-heading">
+        <code>CheckFirmwareResponse</code>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Response containing the firmware version.</p>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>year</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The two-digit year of the firmware release.</p></td>
+        </tr>
+        <tr>
+          <td><code>month</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The month of the firmware release.</p></td>
+        </tr>
+        <tr>
+          <td><code>day</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The day of the firmware release.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="sds011lib.responses.DeviceIdResponse" class="doc doc-heading">
+        <code>DeviceIdResponse</code>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Device ID response.</p>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The 4 byte device ID.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="sds011lib.responses.QueryResponse" class="doc doc-heading">
+        <code>QueryResponse</code>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>A query read response.</p>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>pm25</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>The PM2.5 reading from the device</p></td>
+        </tr>
+        <tr>
+          <td><code>pm10</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>The PM10 reading from the device.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="sds011lib.responses.ReportingModeResponse" class="doc doc-heading">
+        <code>ReportingModeResponse</code>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Reporting mode response.</p>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>operation_type</code></td>
+          <td>
+                <code><span title="sds011lib._constants.OperationType">OperationType</span></code>
+          </td>
+          <td><p>The operation type the response is for, either QUERY or SET_MODE.</p></td>
+        </tr>
+        <tr>
+          <td><code>state</code></td>
+          <td>
+                <code><span title="sds011lib._constants.ReportingMode">ReportingMode</span></code>
+          </td>
+          <td><p>The current reporting mode, either ACTIVE or QUERYING</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="sds011lib.responses.SleepWakeReadResponse" class="doc doc-heading">
+        <code>SleepWakeReadResponse</code>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Sleep/Wake Response.</p>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>operation_type</code></td>
+          <td>
+                <code><span title="sds011lib._constants.OperationType">OperationType</span></code>
+          </td>
+          <td><p>The operation type the response is for, either QUERY or SET_MODE.</p></td>
+        </tr>
+        <tr>
+          <td><code>state</code></td>
+          <td>
+                <code><span title="sds011lib._constants.SleepState">SleepState</span></code>
+          </td>
+          <td><p>The current sleep state, either WAKE or SLEEP.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="sds011lib.responses.WorkingPeriodReadResponse" class="doc doc-heading">
+        <code>WorkingPeriodReadResponse</code>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Working period response.</p>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>operation_type</code></td>
+          <td>
+                <code><span title="sds011lib._constants.OperationType">OperationType</span></code>
+          </td>
+          <td><p>The operation type the response is for, either QUERY or SET_MODE.</p></td>
+        </tr>
+        <tr>
+          <td><code>interval</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The working period interval, 0-30.  0 Indicates continuous reading.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div><h2 id="exceptions">Exceptions</h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="sds011lib.exceptions" class="doc doc-heading">
+          <code>sds011lib.exceptions</code>
+
+
+</h3>
+
+  <div class="doc doc-contents first">
+  
+      <p>All exception classes for the SDS011.</p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="sds011lib.exceptions.ChecksumFailedException" class="doc doc-heading">
+        <code>ChecksumFailedException</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="sds011lib.exceptions.Sds011Exception" href="#sds011lib.exceptions.Sds011Exception">Sds011Exception</a></code></p>
+
+  
+      <p>Thrown if the checksum value in a response is incorrect.</p>
+<p>This indicates some corruption of the response.</p>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>expected</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The expected checksum</p></td>
+        </tr>
+        <tr>
+          <td><code>actual</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The actual checksum</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="sds011lib.exceptions.IncompleteReadException" class="doc doc-heading">
+        <code>IncompleteReadException</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="sds011lib.exceptions.Sds011Exception" href="#sds011lib.exceptions.Sds011Exception">Sds011Exception</a></code></p>
+
+  
+      <p>Thrown if the device didn't return complete data when asking for a response.</p>
+<p>Responses must be 10 bytes total.  If the device doesn't respond with a complete 10 bytes, it can mean that either
+1) The device is in sleep mode or 2) The device is in query mode, and nothing was requested.</p>
+
+
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="sds011lib.exceptions.IncorrectCommandCodeException" class="doc doc-heading">
+        <code>IncorrectCommandCodeException</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="sds011lib.exceptions.Sds011Exception" href="#sds011lib.exceptions.Sds011Exception">Sds011Exception</a></code></p>
+
+  
+      <p>Thrown if the command code in a response is incorrect.</p>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>expected</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The expected command code as bytes</p></td>
+        </tr>
+        <tr>
+          <td><code>actual</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The actual command code as bytes.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="sds011lib.exceptions.IncorrectCommandException" class="doc doc-heading">
+        <code>IncorrectCommandException</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="sds011lib.exceptions.Sds011Exception" href="#sds011lib.exceptions.Sds011Exception">Sds011Exception</a></code></p>
+
+  
+      <p>Thrown if the command ID in a response is incorrect.</p>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>expected</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The expected command id as bytes</p></td>
+        </tr>
+        <tr>
+          <td><code>actual</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>The actual command id as bytes.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="sds011lib.exceptions.IncorrectWrapperException" class="doc doc-heading">
+        <code>IncorrectWrapperException</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="sds011lib.exceptions.Sds011Exception" href="#sds011lib.exceptions.Sds011Exception">Sds011Exception</a></code></p>
+
+  
+      <p>Thrown if the wrapper of a response (either HEAD or TAIL) is incorrect.</p>
+<p>This indicates some corruption of the response.</p>
+
+
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="sds011lib.exceptions.InvalidDeviceIdException" class="doc doc-heading">
+        <code>InvalidDeviceIdException</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="sds011lib.exceptions.Sds011Exception" href="#sds011lib.exceptions.Sds011Exception">Sds011Exception</a></code></p>
+
+  
+      <p>Thrown if the trying to set the device ID on an invalid device.</p>
+<p>This occurs if you try and send to a device ID that doesn't exist.</p>
+
+
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="sds011lib.exceptions.MissingResponseException" class="doc doc-heading">
+        <code>MissingResponseException</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="sds011lib.exceptions.Sds011Exception" href="#sds011lib.exceptions.Sds011Exception">Sds011Exception</a></code></p>
+
+  
+      <p>Thrown if we are trying to find a response from the device, but it doesn't return in the max iterations.</p>
+<p>This can occur if the device just never responds to a command thats sent.</p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="sds011lib.exceptions.Sds011Exception" class="doc doc-heading">
+        <code>Sds011Exception</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code>Exception</code></p>
+
+  
+      <p>Base exception for SDS011 device.</p>
+
+
+
+  </div>
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.51198bba.min.js"></script>
+      
+    
+  </body>
+</html>
