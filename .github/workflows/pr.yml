@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: [ "3.8", "3.9", "3.10", "3.11" ]
+        python: [ "3.8", "3.9", "3.10", "3.11", "3.12" ]
     steps:
       - uses: actions/checkout@v2
       - name: Setup just
@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: "3.12"
       - name: Install poetry
         uses: Gr1N/setup-poetry@v8
       - name: Install dev dependencies
