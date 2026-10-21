@@ -3,18 +3,18 @@ build: install_deps
 
 # Install dependencies for project
 install_deps:
-    poetry install --no-root
+    uv sync --no-install-project
 
 # Lint code.
 lint:
-    black --check .
-    ruff check .
-    mypy . --strict
+    uv run black --check .
+    uv run ruff check .
+    uv run mypy . --strict
 
 # Format code
 format:
-    black .
+    uv run black .
 
 # Run tests
 test:
-    python -m pytest tests/
+    uv run pytest tests/

@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: [ "3.8", "3.9", "3.10", "3.11", "3.12" ]
+        python: [ "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14" ]
     steps:
       - uses: actions/checkout@v2
       - name: Setup just
@@ -16,12 +16,10 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
-      - name: Install poetry
-        uses: Gr1N/setup-poetry@v8
+      - name: Install uv
+        uses: astral-sh/setup-uv
       - name: Install dev dependencies
-        run: poetry install --no-root
-        env:
-          POETRY_VIRTUALENVS_CREATE: false
+        run: just install_deps
       - name: Check linting
         run: just lint
       - name: Run tox
@@ -30,15 +28,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Setup just
+      - uses: extractions/setup-just@v1
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.12"
-      - name: Install poetry
-        uses: Gr1N/setup-poetry@v8
+          python-version: "3.14"
+      - name: Install uv
+        uses: astral-sh/setup-uv
       - name: Install dev dependencies
-        run: poetry install --no-root
-        env:
-          POETRY_VIRTUALENVS_CREATE: false
+        run: just install_deps
       - name: Run coverage
         run: pytest --cov-report xml --cov sds011lib/ tests/
 
