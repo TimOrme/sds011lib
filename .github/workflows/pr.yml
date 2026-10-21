@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Install uv
-        uses: astral-sh/setup-uv
+        uses: astral-sh/setup-uv@v10.3.1
       - name: Install dev dependencies
         run: just install_deps
       - name: Check linting
@@ -35,7 +35,7 @@ jobs:
         with:
           python-version: "3.14"
       - name: Install uv
-        uses: astral-sh/setup-uv
+        uses: astral-sh/setup-uv@v10.3.1
       - name: Install dev dependencies
         run: just install_deps
       - name: Run coverage
