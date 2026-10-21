@@ -11,6 +11,9 @@ lint:
     uv run ruff check .
     uv run mypy . --strict
 
+tox:
+    uv run tox -e py
+
 # Format code
 format:
     uv run black .

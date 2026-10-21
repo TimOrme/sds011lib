@@ -23,7 +23,7 @@ jobs:
       - name: Check linting
         run: just lint
       - name: Run tox
-        run: tox -e py
+        run: just tox
 
   coverage:
     runs-on: ubuntu-latest
