@@ -39,7 +39,7 @@ jobs:
       - name: Install dev dependencies
         run: just install_deps
       - name: Run coverage
-        run: pytest --cov-report xml --cov sds011lib/ tests/
+        run: uv run pytest --cov-report xml --cov sds011lib/ tests/
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3

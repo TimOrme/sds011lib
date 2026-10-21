@@ -16,9 +16,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v10.3.1
       - name: Install dev dependencies
-        run: poetry install --no-root
-        env:
-          POETRY_VIRTUALENVS_CREATE: false
+        run: just install_deps
       - name: Run tests
         run: just test
       - run: mkdocs gh-deploy --force --clean --verbose
