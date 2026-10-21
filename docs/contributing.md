@@ -5,7 +5,7 @@
 To start developing, you'll need to install the following tools:
 
 - [Python 3.9+](https://www.python.org/) - For API Code
-- [poetry](https://python-poetry.org/) - For python package management
+- [uv](https://docs.astral.sh/uv/) - For python package management
 - [justfile](https://github.com/casey/just) - For builds
 
 Optionally, we have [pre-commit](https://pre-commit.com/) hooks available as well.  To install hooks, just run
