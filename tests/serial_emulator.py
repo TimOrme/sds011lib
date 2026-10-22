@@ -1,15 +1,15 @@
+from dataclasses import dataclass
+from datetime import datetime
+
 from sds011lib._constants import (
     HEAD,
     TAIL,
     Command,
-    ReportingMode,
     OperationType,
+    ReportingMode,
     ResponseType,
     SleepState,
 )
-from dataclasses import dataclass
-from typing import Optional
-from datetime import datetime
 
 
 @dataclass(frozen=True)
@@ -45,7 +45,6 @@ class Sds011SerialEmulator:
 
     def open(self) -> None:
         """No-op open."""
-        pass
 
     def close(self) -> None:
         """Resets response buffer."""
@@ -68,18 +67,13 @@ class Sds011SerialEmulator:
     def _generate_read(self, response_type: ResponseType, cmd: bytes) -> bytes:
         """Generate a read command, with wrapper and checksum."""
         cmd_and_id = cmd + self.device_id
-        return (
-            HEAD + response_type.value + cmd_and_id + read_checksum(cmd_and_id) + TAIL
-        )
+        return HEAD + response_type.value + cmd_and_id + read_checksum(cmd_and_id) + TAIL
 
-    def write(self, data: bytes) -> Optional[int]:
+    def write(self, data: bytes) -> int | None:
         """Write to the emulator."""
         last_write = parse_write_data(data)
 
-        if (
-            self.sleep_state == SleepState.SLEEP
-            and last_write.command != Command.SET_SLEEP
-        ):
+        if self.sleep_state == SleepState.SLEEP and last_write.command != Command.SET_SLEEP:
             # Device ignores commands in sleep mode, unless its a sleep command
             return len(data)
 
@@ -87,16 +81,10 @@ class Sds011SerialEmulator:
             operation_type = OperationType(last_write.raw_body_data[1:2])
             if operation_type == OperationType.SET_MODE:
                 new_reporting_mode = ReportingMode(last_write.raw_body_data[2:3])
-                self._add_to_response_buffer(
-                    self._get_reporting_mode_response(
-                        new_reporting_mode, operation_type
-                    )
-                )
+                self._add_to_response_buffer(self._get_reporting_mode_response(new_reporting_mode, operation_type))
                 self.query_mode = new_reporting_mode
             else:
-                self._add_to_response_buffer(
-                    self._get_reporting_mode_response(self.query_mode, operation_type)
-                )
+                self._add_to_response_buffer(self._get_reporting_mode_response(self.query_mode, operation_type))
         elif last_write.command == Command.QUERY:
             self._add_to_response_buffer(self._get_query_response())
         elif last_write.command == Command.SET_DEVICE_ID:
@@ -106,36 +94,24 @@ class Sds011SerialEmulator:
             operation_type = OperationType(last_write.raw_body_data[1:2])
             if operation_type == OperationType.SET_MODE:
                 new_sleep_state = SleepState(last_write.raw_body_data[2:3])
-                self._add_to_response_buffer(
-                    self._set_sleep_response(new_sleep_state, operation_type)
-                )
+                self._add_to_response_buffer(self._set_sleep_response(new_sleep_state, operation_type))
                 self.sleep_state = new_sleep_state
             else:
-                self._add_to_response_buffer(
-                    self._set_sleep_response(self.sleep_state, operation_type)
-                )
+                self._add_to_response_buffer(self._set_sleep_response(self.sleep_state, operation_type))
         elif last_write.command == Command.SET_WORKING_PERIOD:
             operation_type = OperationType(last_write.raw_body_data[1:2])
             if operation_type == OperationType.SET_MODE:
                 new_working_period = last_write.raw_body_data[2:3]
-                self._add_to_response_buffer(
-                    self._get_working_period_response(
-                        new_working_period, operation_type
-                    )
-                )
+                self._add_to_response_buffer(self._get_working_period_response(new_working_period, operation_type))
                 self.working_period = new_working_period
             else:
-                self._add_to_response_buffer(
-                    self._get_working_period_response(
-                        self.working_period, operation_type
-                    )
-                )
+                self._add_to_response_buffer(self._get_working_period_response(self.working_period, operation_type))
         elif last_write.command == Command.CHECK_FIRMWARE_VERSION:
             self._add_to_response_buffer(self._check_firmware_response())
         return len(data)
 
     def _get_query_response(self) -> bytes:
-        return self._generate_read(ResponseType.QUERY_RESPONSE, b"\xE5\x10\xBF\x14")
+        return self._generate_read(ResponseType.QUERY_RESPONSE, b"\xe5\x10\xbf\x14")
 
     def _add_to_response_buffer(self, data: bytes) -> None:
         if self.query_mode == ReportingMode.ACTIVE:
@@ -149,54 +125,34 @@ class Sds011SerialEmulator:
         """
         now = datetime.now()
         seconds_since_last_command = (now - self.last_command_time).seconds
-        for x in range(0, max(seconds_since_last_command, 1)):
+        for x in range(max(seconds_since_last_command, 1)):
             self.response_buffer += self._get_query_response()
 
-    def _get_reporting_mode_response(
-        self, reporting_mode: ReportingMode, operation_type: OperationType
-    ) -> bytes:
+    def _get_reporting_mode_response(self, reporting_mode: ReportingMode, operation_type: OperationType) -> bytes:
         return self._generate_read(
             ResponseType.GENERAL_RESPONSE,
-            Command.SET_REPORTING_MODE.value
-            + operation_type.value
-            + reporting_mode.value
-            + b"\x00",
+            Command.SET_REPORTING_MODE.value + operation_type.value + reporting_mode.value + b"\x00",
         )
 
     def _get_device_id_response(self) -> bytes:
-        return self._generate_read(
-            ResponseType.GENERAL_RESPONSE, Command.SET_DEVICE_ID.value + (b"\x00" * 3)
-        )
+        return self._generate_read(ResponseType.GENERAL_RESPONSE, Command.SET_DEVICE_ID.value + (b"\x00" * 3))
 
-    def _set_sleep_response(
-        self, sleep_state: SleepState, operation_type: OperationType
-    ) -> bytes:
+    def _set_sleep_response(self, sleep_state: SleepState, operation_type: OperationType) -> bytes:
         return self._generate_read(
             ResponseType.GENERAL_RESPONSE,
-            Command.SET_SLEEP.value
-            + operation_type.value
-            + sleep_state.value
-            + b"\x00",
+            Command.SET_SLEEP.value + operation_type.value + sleep_state.value + b"\x00",
         )
 
-    def _get_working_period_response(
-        self, working_period: bytes, operation_type: OperationType
-    ) -> bytes:
+    def _get_working_period_response(self, working_period: bytes, operation_type: OperationType) -> bytes:
         return self._generate_read(
             ResponseType.GENERAL_RESPONSE,
-            Command.SET_WORKING_PERIOD.value
-            + operation_type.value
-            + working_period
-            + b"\x00",
+            Command.SET_WORKING_PERIOD.value + operation_type.value + working_period + b"\x00",
         )
 
     def _check_firmware_response(self) -> bytes:
         return self._generate_read(
             ResponseType.GENERAL_RESPONSE,
-            Command.CHECK_FIRMWARE_VERSION.value
-            + self.firmware_year
-            + self.firmware_month
-            + self.firmware_day,
+            Command.CHECK_FIRMWARE_VERSION.value + self.firmware_year + self.firmware_month + self.firmware_day,
         )
 
 
@@ -211,6 +167,4 @@ def parse_write_data(data: bytes) -> WriteData:
     """Parse write data from the emulator into a neater wrapper."""
     if len(data) != 19:
         raise AttributeError("Data is wrong size.")
-    return WriteData(
-        raw_data=data, raw_body_data=data[2:15], command=Command(data[2:3])
-    )
+    return WriteData(raw_data=data, raw_body_data=data[2:15], command=Command(data[2:3]))

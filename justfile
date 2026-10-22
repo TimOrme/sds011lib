@@ -7,7 +7,7 @@ install_deps:
 
 # Lint code.
 lint:
-    uv run black --check .
+    uv run ruff format --check .
     uv run ruff check .
     uv run mypy . --strict
 
@@ -16,7 +16,7 @@ tox:
 
 # Format code
 format:
-    uv run black .
+    uv run ruff format .
 
 # Run tests
 test:

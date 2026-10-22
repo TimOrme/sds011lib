@@ -4,8 +4,6 @@
 class Sds011Exception(Exception):
     """Base exception for SDS011 device."""
 
-    pass
-
 
 class ChecksumFailedException(Sds011Exception):
     """Thrown if the checksum value in a response is incorrect.
@@ -60,8 +58,6 @@ class IncorrectWrapperException(Sds011Exception):
     This indicates some corruption of the response.
     """
 
-    pass
-
 
 class IncompleteReadException(Sds011Exception):
     """Thrown if the device didn't return complete data when asking for a response.
@@ -70,16 +66,12 @@ class IncompleteReadException(Sds011Exception):
     1) The device is in sleep mode or 2) The device is in query mode, and nothing was requested.
     """
 
-    pass
-
 
 class InvalidDeviceIdException(Sds011Exception):
     """Thrown if the trying to set the device ID on an invalid device.
 
     This occurs if you try and send to a device ID that doesn't exist.
     """
-
-    pass
 
 
 class MissingResponseException(Sds011Exception):

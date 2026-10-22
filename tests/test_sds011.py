@@ -10,21 +10,24 @@ TEST_DEVICE=/dev/ttyUSB0 pytest tests/
 
 If `TEST_DEVICE` isn't set, tests will only run against the emulator.
 """
-import pytest
 
-from sds011lib import SDS011Reader, SDS011ActiveReader, SDS011QueryReader
+import os
+from collections.abc import Generator
+from unittest.mock import Mock, patch
+
+import pytest
+from serial import Serial
+
+from sds011lib import SDS011ActiveReader, SDS011QueryReader, SDS011Reader
 from sds011lib._constants import ReportingMode, SleepState
 from sds011lib.exceptions import (
-    IncompleteReadException,
     ChecksumFailedException,
+    IncompleteReadException,
     IncorrectWrapperException,
     MissingResponseException,
 )
+
 from .serial_emulator import Sds011SerialEmulator
-from typing import Generator, List
-from unittest.mock import Mock, patch
-from serial import Serial
-import os
 
 
 def pm25_in_range(pm25: float) -> bool:
@@ -35,7 +38,7 @@ def pm10_in_range(pm10: float) -> bool:
     return 999.9 >= pm10 >= 0.0
 
 
-def get_reader_fixtures() -> List[str]:
+def get_reader_fixtures() -> list[str]:
     fixtures = ["emulated_reader"]
     if os.getenv("TEST_DEVICE", None):
         fixtures.append("integrated_reader")
@@ -137,9 +140,7 @@ class TestBaseReader:
             reader.query_working_period()
 
     @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
-    def test_values_changed_sleep_mode_arent_persisted(
-        self, reader: SDS011Reader
-    ) -> None:
+    def test_values_changed_sleep_mode_arent_persisted(self, reader: SDS011Reader) -> None:
         # Device can't set values while its asleep.
         reader.set_query_mode()
         reader.sleep()
@@ -332,7 +333,7 @@ class TestBaseReader:
         reader.max_loop_count = 3
 
         # Send 3 commands to set device ID, filling up the response buffer.
-        for i in range(0, 4):
+        for i in range(4):
             reader.set_device_id(b"\xaa\xbb")
 
         # Send a data command

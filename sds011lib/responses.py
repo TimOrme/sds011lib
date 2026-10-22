@@ -2,13 +2,14 @@
 
 Creates and validates typed classes from binary responses from the device.
 """
-from ._constants import (
-    SleepState,
-    OperationType,
-    ReportingMode,
-)
 
 from dataclasses import dataclass
+
+from ._constants import (
+    OperationType,
+    ReportingMode,
+    SleepState,
+)
 
 
 @dataclass(frozen=True)
