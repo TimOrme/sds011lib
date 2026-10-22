@@ -1,6 +1,6 @@
 """Byte constants for the SDS011 device."""
-from enum import Enum
 
+from enum import Enum
 
 # Message head constant
 HEAD = b"\xaa"

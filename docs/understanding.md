@@ -103,7 +103,8 @@ You can try and configure this to tune it if you'd like:
 ```python
 from sds011lib import SDS011ActiveReader
 import serial
-# Create a query mode reader, with a 2 second sleep instead 
-# of 1 after a command is sent. 
-reader = SDS011ActiveReader('/dev/ttyUSB0', send_command_sleep=2)
+
+# Create a query mode reader, with a 2 second sleep instead
+# of 1 after a command is sent.
+reader = SDS011ActiveReader("/dev/ttyUSB0", send_command_sleep=2)
 ```

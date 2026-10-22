@@ -49,6 +49,7 @@ from typing import Generator
 from tests.serial_emulator import Sds011SerialEmulator
 from sds011lib import SDS011Reader
 
+
 class TestBaseReader:
     @pytest.fixture
     def reader(self) -> Generator[SDS011Reader, None, None]:
@@ -69,11 +70,12 @@ import serial
 from typing import Generator
 from sds011lib import SDS011Reader
 
+
 class TestBaseReader:
     @pytest.fixture
     def reader(self) -> Generator[SDS011Reader, None, None]:
         # Set up the reader to use a device attached on /dev/ttyUSB0
-        ser_dev = serial.Serial('/dev/ttyUSB0', timeout=2, baudrate=9600)
+        ser_dev = serial.Serial("/dev/ttyUSB0", timeout=2, baudrate=9600)
         reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
         yield reader
 ```
