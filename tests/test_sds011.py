@@ -344,7 +344,7 @@ class TestBaseReader:
             reader.query_data()
 
     def test_raises_if_not_serial_or_string(self) -> None:
-        with pytest.raises(AttributeError):
+        with pytest.raises(TypeError):
             SDS011Reader(1234)  # type: ignore
 
     def test_bad_checksum(self) -> None:
