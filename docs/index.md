@@ -8,7 +8,7 @@ included adaptor.
 
 ## Installation
 
-`sds011lib` requires Python3.8+.
+`sds011lib` requires Python3.10+.
 
 ```commandline
 pip install sds011lib
