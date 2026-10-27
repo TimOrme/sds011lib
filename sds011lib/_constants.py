@@ -7,6 +7,10 @@ HEAD = b"\xaa"
 # Message tail constant
 TAIL = b"\xab"
 
+# Some firmware versions set the tail as incorrect bytes on the sleep command.
+# See: https://github.com/TimOrme/sds011lib/issues/15
+ILLEGAL_TAIL = b"\xff"
+
 # ID to send if the command should be issued to all sensor IDs.
 ALL_SENSOR_ID = b"\xff\xff"
 

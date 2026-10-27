@@ -27,7 +27,7 @@ These pollutants can be used in part to calculate the [EPA AQI](https://www.airn
 The SDS011 can report in both `ACTIVE` and `QUERYING` mode, with `ACTIVE` being the factory default.
 
 In `ACTIVE` mode, the device will always respond with pollutant data, regardless of what other commands are sent to it.
-It constantly responds with this data, though there are [caveats](#writing-in-active-mode) to this functionality.
+It constantly responds with this data, though there are [caveats](#sending-commands-in-active-mode) to this functionality.
 
 In `QUERYING` mode, the device operates in a request/response model, where a request is written to the device, and then 
 it writes a response to it's output.  In this mode, pollutant data must specifically be asked for. 
