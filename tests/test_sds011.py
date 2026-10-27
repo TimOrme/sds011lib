@@ -39,7 +39,7 @@ def pm10_in_range(pm10: float) -> bool:
 
 
 def get_reader_fixtures() -> list[str]:
-    fixtures = ["emulated_reader"]
+    fixtures = ["emulated_reader", "emulated_broken_reader"]
     if os.getenv("TEST_DEVICE", None):
         fixtures.append("integrated_reader")
     return fixtures
@@ -74,6 +74,12 @@ class TestBaseReader:
     @pytest.fixture
     def emulated_reader(self) -> SDS011Reader:
         ser_dev = Sds011SerialEmulator()
+        reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
+        return reader
+
+    @pytest.fixture
+    def emulated_broken_reader(self) -> SDS011Reader:
+        ser_dev = Sds011SerialEmulator(use_invalid_tail=True)
         reader = SDS011Reader(ser_dev=ser_dev, send_command_sleep=0)
         return reader
 
@@ -447,6 +453,12 @@ class TestActiveModeReader:
         reader = SDS011ActiveReader(ser_dev=ser_dev, send_command_sleep=0)
         return reader
 
+    @pytest.fixture
+    def emulated_broken_reader(self) -> SDS011ActiveReader:
+        ser_dev = Sds011SerialEmulator(use_invalid_tail=True)
+        reader = SDS011ActiveReader(ser_dev=ser_dev, send_command_sleep=0)
+        return reader
+
     @pytest.mark.parametrize("reader", get_reader_fixtures(), indirect=True)
     def test_query(self, reader: SDS011ActiveReader) -> None:
         result = reader.query()
@@ -511,6 +523,12 @@ class TestQueryModeReader:
     @pytest.fixture
     def emulated_reader(self) -> SDS011QueryReader:
         ser_dev = Sds011SerialEmulator()
+        reader = SDS011QueryReader(ser_dev=ser_dev, send_command_sleep=0)
+        return reader
+
+    @pytest.fixture
+    def emulated_broken_reader(self) -> SDS011QueryReader:
+        ser_dev = Sds011SerialEmulator(use_invalid_tail=True)
         reader = SDS011QueryReader(ser_dev=ser_dev, send_command_sleep=0)
         return reader
 

@@ -3,6 +3,7 @@ from datetime import datetime
 
 from sds011lib._constants import (
     HEAD,
+    ILLEGAL_TAIL,
     TAIL,
     Command,
     OperationType,
@@ -25,9 +26,12 @@ class Sds011SerialEmulator:
     """Emulated SDS011 Serial Port.
 
     Behaves like the device itself, except is a bit more predictable in ACTIVE mode.
+
+    Args:
+        use_invalid_tail: Flag if the emulator should use an invalid TAIL byte to simulate broken firmwares.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, use_invalid_tail: bool = False) -> None:
         """Create the emulator.
 
         Initializes to factory defaults.
@@ -42,6 +46,7 @@ class Sds011SerialEmulator:
         self.firmware_month = bytes([2])
         self.firmware_day = bytes([3])
         self.last_command_time: datetime = datetime.now()
+        self.use_invalid_tail = use_invalid_tail
 
     def open(self) -> None:
         """No-op open."""
@@ -67,7 +72,11 @@ class Sds011SerialEmulator:
     def _generate_read(self, response_type: ResponseType, cmd: bytes) -> bytes:
         """Generate a read command, with wrapper and checksum."""
         cmd_and_id = cmd + self.device_id
-        return HEAD + response_type.value + cmd_and_id + read_checksum(cmd_and_id) + TAIL
+
+        tail = TAIL
+        if self.use_invalid_tail:
+            tail = ILLEGAL_TAIL
+        return HEAD + response_type.value + cmd_and_id + read_checksum(cmd_and_id) + tail
 
     def write(self, data: bytes) -> int | None:
         """Write to the emulator."""

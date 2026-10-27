@@ -4,7 +4,7 @@
 
 To start developing, you'll need to install the following tools:
 
-- [Python 3.9+](https://www.python.org/) - For API Code
+- [Python 3.10+](https://www.python.org/) - For API Code
 - [uv](https://docs.astral.sh/uv/) - For python package management
 - [justfile](https://github.com/casey/just) - For builds
 

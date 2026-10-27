@@ -23,6 +23,7 @@ from ._constants import (
     HEAD,
     SUBMIT_TYPE,
     TAIL,
+    ILLEGAL_TAIL,
     Command,
     OperationType,
     ReportingMode,
@@ -113,7 +114,7 @@ def _verify_read_response(read_response: _RawReadResponse) -> None:
     """
     if read_response.head != HEAD:
         raise IncorrectWrapperException()
-    if read_response.tail != TAIL:
+    if read_response.tail != TAIL and read_response.tail != ILLEGAL_TAIL:
         raise IncorrectWrapperException()
     if read_response.checksum != _calc_checksum(read_response.payload):
         raise ChecksumFailedException(
