@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from sds011lib import ILLEGAL_TAIL
 from sds011lib._constants import (
     HEAD,
+    ILLEGAL_TAIL,
     TAIL,
     Command,
     OperationType,
