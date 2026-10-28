@@ -33,6 +33,8 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
+    permissions:
+      id-token: write # for Trusted Publishing + attest-action
     steps:
       - name: Install uv
         uses: astral-sh/setup-uv@v10.3.1
