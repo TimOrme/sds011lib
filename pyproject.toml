@@ -1,6 +1,6 @@
 [project]
 name = "sds011lib"
-version = "0.4.0"
+version = "0.5.0"
 description = "SDS011 Library"
 authors = [{ name = "Tim Orme", email = "TimothyOrme@gmail.com" }]
 requires-python = ">=3.10,<4"
